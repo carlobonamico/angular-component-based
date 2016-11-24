@@ -8,7 +8,7 @@ In your first Angular project, the framework helped you quickly create an HTML5 
 
 
 #Slides
-* [TODO-6.pdf](TODO-Slides-6.pdf)
+* [angular-component-based-slides.pdf](angular-component-based-slides.pdf)
 
 #Labs
 * [labs.md](labs.md)
