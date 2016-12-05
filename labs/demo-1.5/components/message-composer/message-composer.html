@@ -11,4 +11,10 @@
         <button class="btn " ng-click="composeCtrl.save()">Save</button>
         <button class="btn " ng-click="composeCtrl.cancel()">Cancel</button>
     </form>
+    <h4>Preview</h4>
+    <message-viewer 
+        message="composeCtrl.draft"
+        show-actions="false"
+        >
+    </message-viewer>
 </div>

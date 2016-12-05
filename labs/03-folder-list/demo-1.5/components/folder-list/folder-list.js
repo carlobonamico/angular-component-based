@@ -40,7 +40,7 @@ function FolderListController()
     {
         this.currentFolder = folder; 
         this.onSelect({
-            folder: folder
+            folder: this.currentFolder
         });
     };
     

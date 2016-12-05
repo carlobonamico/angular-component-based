@@ -7,7 +7,7 @@
         <div class="sender"> From: {{messageViewerCtrl.message.from}}</div>
         <div> To: {{messageViewerCtrl.message.to}}</div>
         <div> 10/03/2016 12:00</div><!-- TODO date formatted with filter -->
-        <div>
+        <div ng-show="messageViewerCtrl.showActions">
         <common-star entity="messageViewerCtrl.message"></common-star>
         <button class="btn" ng-click="messageViewerCtrl.reply()">Reply</button>
         <button class="btn" ng-click="messageViewerCtrl.forward()">Forward</button>

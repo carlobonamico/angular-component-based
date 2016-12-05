@@ -8,6 +8,7 @@ angular.module("mailApp").component("messageViewer",{
     bindings: {
         //name of the field in the controller = name of the attribute in the html
         message : "<message",  //mandatory
+        showActions: "<",
         onReply : "&",
         onForward : "&",
         onDelete : "&",
@@ -17,6 +18,9 @@ angular.module("mailApp").component("messageViewer",{
 
 function MessageViewerController() {
 
+    if (this.showActions == undefined)
+        this.showActions = true; 
+        
     //FUTURE lab - refactor the messageActionsToolbar with transclusion
     this.reply = function () {
         
