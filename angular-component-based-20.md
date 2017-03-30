@@ -42,7 +42,7 @@
 * Follow me at [@carlobonamico](https://twitter.com/carlobonamico) / [@nis_srl](https://twitter.com/nis_srl)
 
 * Contact me
-    carlo.bonamico@nispro.it / carlo.bonamico@gmail.com
+    carlo.bonamico@gmail.com / carlo.bonamico@gmail.com
   
 
 
