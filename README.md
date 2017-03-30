@@ -37,7 +37,7 @@ using modern Angular 1.5 style and constructs.
 
 ##Beyond Hello World and TodoMVC
 * Issues and challenges in developing complex / large HTML5 applications
-* From huge controllers and “scope soup” to Component-based Uis
+* From huge controllers and "scope soup" to Component-based Uis
 
 ##Designing with Components
 * How to identify application Components
@@ -56,7 +56,7 @@ using modern Angular 1.5 style and constructs.
 * How to interconnect multiple collaborating Components to achieve complex UI interactions
 
 ##Component Roles
-* “Smart”, “dumb” and “stateless” components
+* "Smart", "dumb" and "stateless" components
 * When to use two-way DataBinding and when One-Way Data Flow
 * refactoring
 

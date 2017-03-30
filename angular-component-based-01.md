@@ -5,7 +5,7 @@
 ## TOPICS
 * How does our code become unmanageable? A practical example
 * Issues and challenges in developing complex / large HTML5 applications
-* Huge controllers and “scope soup”
+* Huge controllers and "scope soup"
 
 
 
@@ -38,14 +38,14 @@
 
 
 ## TOPICS
-* From huge controllers and “scope soup” to Component-based Uis
+* From huge controllers and "scope soup" to Component-based Uis
 * How to identify application Components
 
 
 
 # Thinking in Components
 * Learn to split a single "View" or "Page" from the user perspective into a hierarchy of Components
-From huge controllers and “scope soup” to Component-based Uis
+From huge controllers and "scope soup" to Component-based Uis
 * How to identify application Components
 
 
@@ -566,7 +566,7 @@ We achieve complex behaviours by collaboration of many simpler components
 
 
 # Component-based UI Architecture
-* “Smart”, “dumb” and “stateless” components
+* "Smart", "dumb" and "stateless" components
 
 
 

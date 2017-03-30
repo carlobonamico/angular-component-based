@@ -64,7 +64,7 @@ and/or IDE (Eclipse,  NetBeans, Intellij, Visual Studio,.. )
 #TOPICS
 * How does our code become unmanageable? A practical example
 * Issues and challenges in developing complex / large HTML5 applications
-* From huge controllers and “scope soup” to Component-based Uis
+* From huge controllers and "scope soup" to Component-based Uis
 * How to identify application Components
 * How to develop a simple Component in Angular 1.5
 * Adding inputs to the Component through bindings
@@ -75,7 +75,7 @@ and/or IDE (Eclipse,  NetBeans, Intellij, Visual Studio,.. )
 
 #TOPICS 
 * How to interconnect multiple collaborating Components to achieve complex UI interactions
-* “Smart”, “dumb” and “stateless” components
+* "Smart", "dumb" and "stateless" components
 * When to use two-way DataBinding and when One-Way Data Flow
 * refactoring
 * From AngularJS 1.5 to Angular 2.0: syntax changes, but Component-based architecture remains
