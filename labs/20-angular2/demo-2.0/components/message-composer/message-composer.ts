@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 @Component({selector: 'message-composer', 
@@ -13,7 +13,9 @@ export class MessageComposerComponent implements OnInit {
     onSave = new EventEmitter<any>(); 
     onCancel = new EventEmitter<any>();
 
-    accountEmail = "carlo.bonamico@gmail.com";
+    @ViewChild('draftForm') draftForm;
+    
+accountEmail = "carlo.bonamico@gmail.com";
 
     ngOnInit(){
         if (!this.draft)
@@ -36,6 +38,7 @@ export class MessageComposerComponent implements OnInit {
     
     send()
     {
+        console.log(this.draftForm);
         this.onSend.emit({
             message : this.draft
         });     
