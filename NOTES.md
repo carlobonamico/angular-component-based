@@ -1,6 +1,6 @@
 #NOTES.md
 
-#Topics to be completed
+#Topics to be refined with more details
 
 More details on 
 * binding syntax
