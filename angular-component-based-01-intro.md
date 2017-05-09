@@ -1,8 +1,4 @@
-# PART 2 - Components with Angular 2
-
-
-
-# Enter Angular 2
+# PART 1 - Introduction to Angular 2
 
 
 
@@ -109,7 +105,14 @@ export class AppModule { }
 
 
 
-## Common directives
+## Lab
+Modify the Hello World example so that
+* the Component class initialize a Date variable to the current Timestamp
+* the html template displays it 
+
+
+
+## Common Utility directives
 From 
 ```html
 <div ng-class="{active: isActive}">
