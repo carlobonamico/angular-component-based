@@ -2,10 +2,36 @@
 
 
 
-# What's an Observable
-Think of an Observable as a stream of events published by some source. To listen for events in this stream, subscribe to the Observable.
+# Some references about Angular Basics
+Angular 4 with Yakov Fain
+https://www.youtube.com/watch?v=k8r76d8QzXs
 
-http://reactivex.io/documentation/observable.html
+TypeScript with Dan Wahlin
+https://www.youtube.com/watch?v=4xScMnaasG0&feature=em-subs_digest-vrecs
+
+Packaging Angular
+https://www.youtube.com/watch?v=unICbsPGFIA&feature=em-subs_digest-vrecs
+
+
+
+# Observables and Reactive Programming
+
+
+
+# What's an Observable
+Observable == stream of events 
+* published by some source
+* observed/subscribed by one or more functions
+
+To listen for events in this stream, subscribe to the Observable.
+
+The introduction to Reactive Programming you have been missing (Andre Staltz)
+https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
+
+Functional Programming you already know (Kevlin Henney)
+https://www.youtube.com/watch?v=lNKXTlCOGEc
+
+
 
 ### Let's see it in action
 * http://rxmarbles.com/
@@ -13,31 +39,141 @@ http://reactivex.io/documentation/observable.html
 
 
 # Creating an Observable
+A stream containing a single value
+```
+var source = Rx.Observable
+  .just({name: "Carlo"});
+```
+
+A number sequence as a stream
+```
+var source = Rx.Observable
+  .range(1, 10);
+```
+
+Or from an Array
+```
+var source = Rx.Observable.from(array);
+```
+
 * https://github.com/ReactiveX/rxjs
 * http://reactivex.io/rxjs/
 * http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html
+* http://reactivex.io/documentation/observable.html
 
 
 
 # Consuming events
 ```
-    this.heroService.getHeroes()
-                     .subscribe(
-                       heroes => this.heroes = heroes,
-                       error =>  this.errorMessage = <any>error);
+    source.subscribe(
+          event => { console.log("Event received "+event); },
+          error =>  this.errorMessage = <any>error);
+```
+
+Remember to ``unsubscribe`` the stream at the end to prevent memory leaks
+
+
+
+# Programmatically generate events
+```
+var source = Rx.Observable.create(observer => {
+  // Yield a two values and complete
+  observer.onNext(42);
+  observer.onNext(45);
+  
+  observer.onCompleted();
+  // Any cleanup logic might go here
+  return () => console.log('disposed')
+});
+```
+
+https://xgrommx.github.io/rx-book/content/getting_started_with_rxjs/creating_and_querying_observable_sequences/creating_and_subscribing_to_simple_observable_sequences.html
+
+
+
+# A timer / scheduler
+```
+var source = Rx.Observable.timer(
+  5000, /* 5 seconds */
+  1000 /* 1 second */)
+   .timestamp(); //adds the timestamp to generated events
+
+var subscription = source.subscribe(
+  x => console.log(x.value + ': ' + x.timestamp));
 ```
 
 
 
-# Event Streams
-* http://reactivex.io/documentation/operators.html
+# Publish/Subscribe with Subjects
 * http://reactivex.io/documentation/subject.html
+
+
+
+# Combining and processing Streams
+* http://reactivex.io/documentation/operators.html
 * https://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html
 
+
+* https://netbasal.com/rxjs-six-operators-that-you-must-know-5ed3b6e238a0
+
+
+
+# Managing HTTP calls with RxJs
+```
+import { Http, Response }          from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
+@Injectable()
+export class HeroService {
+  private heroesUrl = 'api/heroes';  // URL to web API
+  constructor (private http: Http) {}
+  getHeroes(): Observable<Hero[]> {
+    return this.http.get(this.heroesUrl)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+  
+  extractData(res: Response) {
+    let body = res.json();
+    return body.data || { };
+  }
+```
+
+
+
+# Managing Errors
+```
+  private handleError (error: Response | any) {
+    // In a real world app, you might use a remote logging infrastructure
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
+    console.error(errMsg);
+    return Observable.throw(errMsg);
+  }
+}
+```
+
+
+# Stream composition
+At this point, if you want to add retry on error, just add 
+```
+.retry(3);
+```
 
 
 
 # Now I see why...
+Creating a smart Autocomplete widget
+
+UI
 ```
 @Component({
   selector: 'my-wiki-smart',
@@ -54,6 +190,7 @@ http://reactivex.io/documentation/observable.html
 
 
 
+# Piping requests
 ```
 export class WikiSmartComponent implements OnInit {
   items: Observable<string[]>;
@@ -71,8 +208,20 @@ export class WikiSmartComponent implements OnInit {
 
 
 
-# With In Memory API
-https://plnkr.co/edit/sIi9tWbekqAbxqwZEwkX?p=preview
+# How do I...
+https://xgrommx.github.io/rx-book/content/getting_started_with_rxjs/creating_and_querying_observable_sequences/operators_by_category.html
+https://xgrommx.github.io/rx-book/content/which_operator_do_i_use/instance_operators.html
+
+
+
+# Creating a custom operator
+```
+function toJSON<T>(): Observable<T> {
+  return this.map(( response : Response ) => response.json());
+}
+
+Observable.prototype.toJSON = toJSON;
+```
 
 
 
@@ -95,12 +244,11 @@ Split between
 And link them with the async pipe
 
 
-https://juristr.com/blog/2016/04/angular2-change-detection/
-
-
-
 
 # Routing
+
+
+
 # What is Routing
 * Wikipedia Example
 * SPA Example
@@ -112,22 +260,268 @@ https://juristr.com/blog/2016/04/angular2-change-detection/
 * State-based
 * Component-based
 
+https://angular-2-training-book.rangle.io/handout/routing
 
 
-# Defining a Route
+
+# Installing the Router
+Add base URL to index.html 
+```
+<base href="/">
+```
+Can also use dynamic script to automatically adapt 
+
+Add dependency to project
+```
+npm install -g @angular/router --save 
+```
+
+
+
+# Defining Routes
+```
+import { Routes, RouterModule } from '@angular/router';
+```
+
+```
+const appRoutes: Routes = [
+  { path: 'messages', component: MessageListComponent },
+  { path: 'message/:id',      component: MessageDetailComponent },
+  {
+    path: 'inbox',
+    component: MessageListComponent,
+    data: { title: 'Inbox', folder: 'inbox' }
+  },
+  { path: '',
+    redirectTo: '/inbox',
+    pathMatch: 'full'
+  },
+  { path: '**', component: PageNotFoundComponent }
+];
+```
+
+
+
+# Including the RouterModule dependency
+```
+@NgModule({
+  imports: [
+    RouterModule.forRoot(appRoutes)
+    // other imports here
+  ],
+  ...
+})
+export class AppModule { }
+```
+
+
 
 # Routed Components
+A component which receives parameters and state from the current route
+
+
 
 # Router-outlet
+To be put: 
+* in the high-level main component, defining the overall layout
+```<router-outlet></router-outlet>```
+* in sub-components for child routes
 
-# Route Parameters
- Snapshot vs params
+* can have multiple outlets with names
+```
+<router-outlet name="popup"></router-outlet>
+```
+
+
+
+# Creating links
+```
+<nav>
+    <a routerLink="/messages" routerLinkActive="active">Messages</a>
+    <a routerLink="/inbox" routerLinkActive="active">Inbox</a>
+  </nav>
+```
+
+
+
+# Passing parameters
+Path Parameters
+```
+  { path: 'message/:id',      component: MessageDetailComponent },
+
+```
+
+```
+this.router.navigate(['/message', message.id]);
+```
+
+
+
+#Query Parameters
+Use the [queryParams] directive along with [routerLink]
+```
+<a [routerLink]="['messages']" [queryParams]="{ page: 99 }">Go to Page 99</a>
+```
+
+Navigate programmatically using the Router service:
+```
+  goToPage(pageNum) {
+    this.router.navigate(['/messages'], { queryParams: { page: pageNum } });
+  }
+```
+
+
+
+# Reading parameters in components
+With Snapshot
+
+```
+ngOnInit() {
+  // (+) converts string 'id' to a number
+  let id = +this.route.snapshot.params['id'];
+
+```
+
+
+
+# Reading parameters with an Observable
+```
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+       this.id = +params['id']; // (+) converts string 'id' to a number
+
+       // In a real app: dispatch action to load the details here.
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+  ```
+
+
+
+# Programmatic navigation
+Have a Router service injected in your component
+```
+private router: Router;
+
+```
+Then 
+
+```
+router.go()
+```
+
+
 
 # Resolvers
+```
+
+@Injectable()
+export class MessageDetailResolver implements Resolve<Message> {
+  constructor(private cs: MessageService, private router: Router) {}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Message> {
+    let id = route.params['id'];
+    
+    return this.cs.getMessage(id).then(message => {
+      if (message) {
+        return message;
+      } else { // id not found
+        this.router.navigate(['/messages']);
+        return null;
+      }
+    });
+  }
+}
+```
+
+
 
 # Guards
+Determine if navigation is possible
 
-# Async - reactive Routing
+```
+@Injectable()
+export class AuthGuard implements CanActivate {
+  canActivate() {
+    console.log('AuthGuard#canActivate called');
+    return true;
+  }
+}
+```
+
+
+
+# Guards for security
+An example: authentication
+```
+const adminRoutes: Routes = [
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        children: [
+          { path: 'crises', component: ManageCrisesComponent },
+          { path: 'heroes', component: ManageHeroesComponent },
+          { path: '', component: AdminDashboardComponent }
+        ],
+      }
+    ]
+  }
+];
+```
+
+http://plnkr.co/edit/sRNxfXsbcWnPU818aZsu?p=preview
+
+
+
+# Guards for UI (e.g. Unsaved Changes)
+```
+import { Injectable }    from '@angular/core';
+import { CanDeactivate } from '@angular/router';
+import { Observable }    from 'rxjs/Observable';
+export interface CanComponentDeactivate {
+ canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
+@Injectable()
+export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
+  canDeactivate(component: CanComponentDeactivate) {
+    return component.canDeactivate ? component.canDeactivate() : true;
+  }
+}
+```
+
+
+
+# Child Routes
+When they must be accessible only within other routes and not by themselves.
+
+```
+const crisisCenterRoutes: Routes = [
+  {
+    path: 'messages',
+    component: CrisisCenterComponent,
+    children: [
+      {
+        path: '',
+        component: MessageListComponent,
+        children: [
+          {
+            path: ':id',
+            component: MessageDetailComponent
+          },
+          {
+            path: 'help',
+            component: HelpComponent
+          },
+        ]
+      }
+    ]
+```
 
 
 
@@ -137,7 +531,12 @@ https://juristr.com/blog/2016/04/angular2-change-detection/
 
 
 ## Angular 2 - to probe further
+Change Detection
+https://angular-2-training-book.rangle.io/handout/change-detection/angular_1_vs_angular_2.html
+https://juristr.com/blog/2016/04/angular2-change-detection/
 
+In Memory API
+https://plnkr.co/edit/sIi9tWbekqAbxqwZEwkX?p=preview
 
 
 
