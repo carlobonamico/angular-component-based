@@ -4,7 +4,7 @@ import {Input, Output, EventEmitter} from '@angular/core';
 @Component({selector: 'message-list', 
     templateUrl : "components/message-list/message-list.html",
     inputs : ["",""],
-    outputs: ["",""],
+    outputs: [""],
     directives: [""]
 
 })
