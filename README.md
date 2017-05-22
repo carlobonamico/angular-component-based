@@ -1,6 +1,6 @@
 Materials and samples for my workshop on 
 
-#Developing a Component-based application with Angular 1.5 and Angular 2.0
+#Developing a Component-based application with Angular 2.0
 * http://milan2016.codemotionworld.com/workshop/developing-a-component-based-application-with-angular-1-5-and-angular-2-0/
 
 #In Short

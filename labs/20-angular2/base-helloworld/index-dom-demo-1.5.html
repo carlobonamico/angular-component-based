@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Angular QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../../lib/bootstrap-3.3.7-dist/css/bootstrap.css">    
+        <link rel="stylesheet" href="style.css">    
+    <script data-require="angular.js@1.5.8" data-semver="1.5.8" src="https://code.angularjs.org/1.5.8/angular.js"></script>
+        
+
+  </head>
+  <!-- 3. Display the application -->
+  <body ng-app="testApp">
+      <mail-view id="mail1">
+        test
+        <h2 id="title2">ciao</h2>
+      </mail-view>
+
+      <button id="button1" >hide</button>  
+      <mail-view></mail-view>
+
+      <ul>
+        <li><mail-view></mail-view>
+        </li>
+      </ul>
+  </body>
+
+  <style>
+    h2 {
+     color : red 
+    }
+
+    mail-view {
+     color : green 
+    }
+  </style>
+
+  <script>
+    angular.module("testApp",[]).component(
+      "mailView", //corrisponde a mail-view in html
+      {
+        templateUrl : "mailView.html",
+        controller : function(){
+          this.now = new Date();
+
+          this.test = function (){
+            this.show = true; 
+          } 
+        }
+      }
+    ); 
+  </script>
+</html>

@@ -19,6 +19,9 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
+import {TemplateService} from "components/template-service/template-service.ts";
+import {LogService} from "components/log-service/log-service.ts";
+
 @NgModule({
   imports:      [ BrowserModule, FormsModule ],
   declarations: [ MailViewComponent,
@@ -29,8 +32,9 @@ import { FormsModule } from '@angular/forms';
     MessageComposerComponent,
     //SearchPanelComponent,
     CommonStarComponent
-    ],
 
+    ],
+  providers: [MessageService, TemplateService, LogService],
   bootstrap:    [ MailViewComponent ]
 })
 export class AppModule { }

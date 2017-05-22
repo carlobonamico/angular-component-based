@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {MessageService} from "components/mailService/mailService.ts";
+import {TemplateService} from "components/template-service/template-service.ts";
+import {LogService} from "components/log-service/log-service.ts";
 
 
 @Component({selector: 'mail-view', 
@@ -13,7 +15,7 @@ export class MailViewComponent  {
     draft;
 
     //TODO DI
-    messageService = new MessageService();
+    
 
     //TODO load data from services (or backend)
     folders = [
@@ -26,10 +28,14 @@ export class MailViewComponent  {
         "Typescript",
     ];
     defaultFolder = 'Inbox';
-    constructor(){
+    constructor( 
+        private messageService: MessageService, 
+        private templateService : TemplateService, 
+        private logService: LogService){
         this.messages = this.loadInbox(); 
         this.selectCurrentMessage(this.messages[0]); 
         
+        this.logService.log("Applicativo partito");
     }
 
     ngOnInit(){
@@ -77,6 +83,7 @@ export class MailViewComponent  {
             subject: "Re: " + message.subject,
             body: ">" + message.body
         };
+//vs var newMessage = this.templateService.getReplyTemplate(message); 
         this.compose(template);
         
     };

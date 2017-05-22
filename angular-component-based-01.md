@@ -30,6 +30,7 @@
 
 
 ## To Learn More
+TODO - link or integrate the Codemotion presentation
 
 
 
@@ -106,8 +107,8 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 ## TOPICS
-* Angular 1.5 Component model and API
-* How to develop a simple Component in Angular 1.5
+* Angular 2 Component model and API
+* How to develop a simple Component in Angular 2
 
 
 
@@ -164,6 +165,8 @@ Angular builds on that and tries to integrate its component model with HTML as m
 
 
 ## Our first component
+TODO - translate to Angular 2 
+
 A minimal ``<hello></hello>`` component
 
 ```js
@@ -206,13 +209,14 @@ Remember: TEST the page at each step
 
 
 ## What's in a Component? 
-* a name, to reference it in HTML (with CamelCase to kebab-case convention)
+* a selector, to reference it in HTML 
+  * a tag name in the simplest case 
+
 * some HTML
   * inline, with ``template``
   * in an external file, with ``templateUrl``
   * dynamic (with a ``function()``)
-* an optional controller
-  * aliased as ``$ctrl`` by default
+* the Component Class
 
 
 
@@ -222,7 +226,7 @@ This is already useful to reduce duplication in our pages, but to be useful, the
 
 
 ## The main page controller
-Role of the ``MailController``
+Role of the ``MailView`` component
 * interact with backend services
 * provide data to the individual components
 * coordinate page elements
@@ -246,6 +250,8 @@ Manages
 
 
 ## Adding a controller
+TODO - translate to Angular 2 
+
 ```js
 angular.module("mailApp").component("messageList",
   {
@@ -286,7 +292,26 @@ We need to separate
 
 
 
+## Passing inputs to Components
+```
+import {Component} from '@angular/core';
+import {Input, Output, EventEmitter} from '@angular/core';
+
+@Component({selector: 'message-viewer', 
+    templateUrl : "components/message-viewer/message-viewer.html",
+    inputs : ["message"],
+    outputs: ["onReply","onForward","onDelete"],
+    directives: ["common-star"]
+})
+export class MessageViewerComponent  {
+    message; 
+```
+
+
+
 ## In the index.html
+TODO - translate to Angular 2 
+
 ```html
   <div ng-controller="MailController as mailCtrl">
 
@@ -299,6 +324,8 @@ We need to separate
 
 
 ## In the component definition 
+TODO - translate to Angular 2 
+
 ```js
 angular.module("mailApp").component("messageList",
   {
@@ -317,11 +344,29 @@ This is automatically available as a ``messages`` field in the controller
 
 
 ## In the component html
+TODO - translate to Angular 2 
+
 ```html
   <div ng-repeat="message in messageListController.messages">
 
   </div>
 ``` 
+
+
+
+
+# Message List component
+Declare the output events in ``MessageViewerComponent.ts``
+* reply
+* forward
+* delete
+
+Handle the button click events and emit the events
+
+In the parent html (mail-view.html)
+* bind the events to the ``MailViewComponent`` class methods
+
+In the ``mail-view.html`` conditionally display the compose section when reply / forward is selected
 
 
 
@@ -344,6 +389,8 @@ Remember: TEST the page at each step - __F12 is your friend__
 
 
 ## Aside - simpler parameters
+TODO - translate to Angular 2 
+
 With the ``@`` binding 
 * Passed to the component on initialization
 * can be computed dynamically, but are not watched by default
@@ -393,6 +440,8 @@ When a user selects a message, two different thing must take place:
 
 
 ## In the component  
+TODO - translate to Angular 2 
+
 ```html
   <div ng-click="messageListCtrl.select(message)"> {{message.subject}}} </div>
 ```
@@ -406,6 +455,8 @@ When a user selects a message, two different thing must take place:
 
 
 ## Outside the component
+TODO - translate to Angular 2 
+
 We would like to be notified
 ```html
   <message-list 
@@ -418,6 +469,8 @@ We would like to be notified
 
 
 ## We need three steps to do this
+TODO - translate to Angular 2 
+
 1) declare the event in the bindings
 ```js
 angular.module("mailApp").component("messageList",
@@ -441,6 +494,8 @@ This injects an ``onSelected`` event callback in the controller instance
 
 
 ## This will NOT work, unless you remember step 3
+TODO - translate to Angular 2 
+
 3) explicitely declare the event object 
  ```javascript
   this.select = function (selectedMessage){
@@ -451,6 +506,30 @@ This injects an ``onSelected`` event callback in the controller instance
   }
 ```
 
+
+
+
+
+## Propagating output from Components
+```
+@Component({
+  moduleId: module.id,
+  selector: 'app-confirm',
+  templateUrl: 'confirm.component.html'
+})
+export class ConfirmComponent {
+  @Input() okMsg = '';
+  @Input('cancelMsg') notOkMsg = '';
+  @Output() ok = new EventEmitter();
+  @Output('cancel') notOk = new EventEmitter();
+  onOkClick() {
+    this.ok.emit(true);
+  }
+  onNotOkClick() {
+    this.notOk.emit(true);
+  }
+}
+```
 
 
 ## LAB 03
@@ -483,6 +562,31 @@ Remember: TEST the page at each step - __F12 is your friend__
 
 
 
+# FolderList component
+Declaring a Component
+1) import Component Class in app.ts
+2) add to ``declarations: []`` section 
+
+3) completing the declaration
+    * define metadata
+    * complete html template
+    * activate the selected class on click
+
+
+Declaring outputs
+
+Instantiate event Emitter
+
+Handle click on folder
+* initially, just log it
+
+Emit the event on click
+
+Bind the event in the parent html template (mail view)
+
+Implement the ``selectFolder()`` method in the parent component
+
+
 ## LAB extra 
 Pass an additional ``allow-create="true"`` parameter
 
@@ -508,36 +612,6 @@ Changing the Controller or the template of a component has a much reduced risk o
 The robustness of the application increases if the components are smaller
 
 See also the Clean Code principles on SRP and Class design
-
-
-
-# Lifecycle callbacks
-
-## TOPICS
-
-## Simplify the lifecycle of a component
-* Reduce boilerplate code
-* perform actions only when it is best or needed
-
-
-
-## $onInit
-## $onChanges
-Example: display the count of unread messages
-
-## $onDestroy
-Called when the scope of the component is 
-## $postLink
-
-
-## Lab 04
-Develop the message-list component
-
-Implement the $OnChanges callback
-
-
-
-## To learn more
 
 
 
@@ -581,6 +655,187 @@ We achieve complex behaviours by collaboration of many simpler components
 ## Lab 05
 Integrate the mail-composer component
 
+Include the component in the app module
+
+Declare inputs
+* draft
+
+Declare output events
+* send, cancel, and optionally save
+
+Include it in the parent html template
+
+Bind the inputs and outputs
+
+Add the message reply logic to mail-view.ts
+* sender becomes to field
+* Prepend "Re" to Subject
+* Prefix body text with ">"
+
+
+
+# Template-Driven Forms
+* quick setup
+* based on familiar `ngModel` directive
+  * similar to Angular 1.x
+* more difficult to dynamically add/modify fields
+
+
+
+# Template-Driven Form recipe
+* include `FormsModule` in the module`imports: []` section
+  * ```import { FormsModule }   from '@angular/forms';```
+* add the `<form>` tag
+* include `name` attribute for each `input` tag
+  * e.g. `<input type="text" name="userName">`
+* add DataBinding to input tags
+  * `[(ngModel)]="user.userName"`
+
+* Optionally add validations e.g. `required` or `[required]="conditional expression"`
+
+
+
+#Advanced Forms Features
+* Give the form a name
+  * `<form #userForm="ngForm">` 
+  * meaning this form has an id of `userForm` which will reference the "ngForm" directive instance in the controller
+
+* Try printing it
+```html
+  {{ userForm.valid }}
+  <pre>{{ userForm | json }}</pre>
+```
+
+
+
+# Form state management
+* `ngModel` will automatically update the following control, form and css properties
+  * `form.valid` -> `ng-valid` css class
+  * `form.field.valid` -> `ng-valid` css class
+  * `form.field.invalid` -> `ng-invalid` css class
+  * and recursively compute them on forms and subforms
+* Other 
+  * valid - invalid
+  * dirty - pristine
+  * touched - untouched
+
+
+
+# Make CSS nice  
+```css
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+```
+
+
+
+# Custom Validation messages
+```html
+ <input type="text" id="name"
+               required
+               [(ngModel)]="user.name" name="name"
+               #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+             class="alert alert-danger">
+```
+
+
+
+# Other features
+* Reset a form to initial state
+```userForm.reset()```
+* Handle form submission (e.g. 'ENTER' key)  
+  * ```<form (ngSubmit)="onSubmit()" #userForm="ngForm">```
+* Prevent submission on invalid form
+```html 
+<button type="submit" class="btn btn-success" [disabled]="!userForm.form.valid">Submit</button>
+```
+
+
+# Forms
+
+ngModel
+
+required
+
+``<form #formName = "ngForm">``
+
+Then form validation status is formName.form.valid
+
+Disable the send button if the form is not valid
+
+Validate minimum 3 characters length in the Subject field
+
+Display a validation error message
+
+
+
+# Lifecycle callbacks
+
+## TOPICS
+
+## Simplify the lifecycle of a component
+* Reduce boilerplate code
+* perform actions only when it is best or needed
+
+
+
+## $onInit
+## $onChanges
+Example: display the count of unread messages
+
+## $onDestroy
+Called when the scope of the component is 
+## $postLink
+
+
+## Lab 04
+Develop the message-list component
+
+Implement the $OnChanges callback
+
+
+
+## To learn more
+
+# Lifecycle Hooks
+## ngOnInit
+## ngOnChanges
+* managing changes in arrays
+https://teropa.info/blog/2016/03/06/writing-an-angular-2-template-directive.html
+
+
+
+# Create a datepicker
+
+CalendarService 
+getDays(monthName)
+
+returns an array of 
+{
+    number : 1,
+    dayOfWeek: "Monday"
+}
+
+Initially, hard-coded array
+
+DatePicker component
+
+Add input binding of selected date
+
+Add output binding of selectedChange date
+
+Display the "closed" header with just the current date
+
+Open the day list on click
+
+Close the day list on click and update hte current date
+
+Emit the selectedDateChange even
 
 
 ## Lab 06
@@ -588,185 +843,221 @@ Integrate the mail-composer component with the reply button in message viewer
 
 
 
-# Bonus: Clean Components
+# Dependency Injection Recipe
+* make sure annotation support is enabled
+```json
+typescriptOptions: {
+  enableMetadataSupport: true
+}
+```
+in `tsconfig.json` and/or `system.conf.js`
 
 
 
-##Concept 1 - Naming
--reading code vs writing code
-- what is a good name?
-- same but different: the importance of conventions
+# Declare Service to be injected
+```typescript
+import 'Injectable' from
 
+@Injectable
+class MessageService {
 
 
-##Concept 3 - What's in a good function?
-- single responsibility
-- separing inputs from outputs
-- if you have to do 3 things, make 4 functions
-- primitives and orchestrators
+}
+```
 
 
+# Add Service to Providers section
+```typescript
+  providers: [MessageService]
+```
 
-##Concept 4 - What's in a good class? Design Principles
-- Single Responsibility Principle
-- collaborating with other classes
-- composition vs inheritance (and the Open/Closed principle)
-- Dependency Injection
-- interfaces and the importante of Contracts
 
 
+# Reference Service in component Constructor
+```typescript
+  constructor(private messageService: MessageService)
+```
 
-## Clean Code
-* It cannot solve all development problems...
 
-* But it can make them way more tractable!
 
 
+#Services
+Create a TemplateService class
 
-## Design Principles
-Once we have got the basics covered, then we will need to understand the Software Dynamics
-* vs the nature (and Laws) of Software
+Create the getReplyTemplate() method
 
-Take them into account => Design Principles
+import the service class in mailView.ts
 
-Basically, Common Sense applied to software design
->Treat your code like your kitchen
-> C.B., about 2013
+Replace the old code with the new method call
 
+Test ot 
 
+Configure the provider in the app module and re-test with Dependency Injection
 
-## Improve our code
-It takes a Deliberate approach and constant effort
 
->To complicate is easy, to simplify is hard
->To complicate, just add, everyone is able to complicate
->Few are able to simplify
->Bruno Munari
 
+#FolderService
+Create the FolderService class
 
+methods
+* getCustomFolders()
+* getFolders()
 
-##reading code vs writing code
->What is written without effort is in general read without pleasure.
->
->Samuel Johnson
+Create with a nerw an instance in mail-view.ts
 
-Most code is written once, but read
-* every time you need to fix a bug
-* to add new features
-* by other developers
-  * including your future self 
+Replace the hard-coded folder lists with the new method calls
 
+Add the FolderService class as a Provider in the module
 
+Inject it in the component constructor
 
-##what is a good name?
-* Ideas?
+Call its methods
 
 
 
-## What is a good name
-<img src="images/naming.png">
 
- * nonsense
- * honest
- * honest & complete
- * does the right thing
- * intent
- * domain abstraction
+# @Injectable
+* Injecting Services into Services
 
-http://llewellynfalco.blogspot.it/p/infographics.html
 
+# LAB 
+Create the LogService and inject it into the other services
 
 
-## Single Responsibility
->Each function should do 1 thing
 
-Or even better, have a single responsibility
-* and reason to change
+# Injector Hierarchy
+https://angular.io/docs/ts/latest/guide/dependency-injection.html
+https://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.html
 
 
 
-## how to find responsibilities? 
-Ask yourself questions...
+# Injector tokens
+```
+import { InjectionToken } from '@angular/core';
 
-* What? 
-* Who?
-* When?
-* Why?
-* Where?
+export const TITLE = new InjectionToken<string>('title');
 
-And put the answer in different sub-functions
+providers: [
+    { provide: Hero,          useValue:    someHero },
+    { provide: TITLE,         useValue:   'Hero of the Month' },
+    { provide: HeroService,   useClass:    HeroService },
+    { provide: LoggerService, useClass:    DateLoggerService },
+    { provide: MinimalLogger, useExisting: LoggerService },
+    { provide: RUNNERS_UP,    useFactory:  runnersUpFactory(2), deps: [Hero, HeroService] }
+  ]
+```
 
 
 
-## Inputs vs outputs
-* make inputs clear
-* limit / avoid output parameters
+# Integration with the REST backend
+## Making Http calls with Promises 
 
 
 
-## 3 things, 4 functions
-## Primitives, Orchestrators, level of abstraction
-* Primitives: small, focused, typically use-case independent
-* Orchestrators: implement use-cases by combining primitives
+# What's a Promise
+```
+  this.http.get(this.heroesUrl)
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError);
+```
 
-* rinse and repeat over multiple levels of abstraction
 
-* benefits:
-  * more reusable
-  * easier to test
 
+# Creating a Promise
+```
+new Promise((resolve, reject) => {
+    if (success)
+      resolve(42);
+  });
+```
+And resolving it later
 
 
-##Single Responsibility Principle
-Have you ever seen your grandmother put dirty clothes in the fridge?
 
-Or biscuits in the vegetable box?
 
-So, why to we do this all the time in our code? 
+# HTTP Client
+* https://angular.io/docs/ts/latest/guide/server-communication.html
 
+### SETUP
+* import ```import { HttpModule } from '@angular/http';```
+* add HttpModule to main NgModule
+ 
 
 
-##Single Responsibility Principle
-Responsibility == reason to change
+# GET
+```
+import { Http, Response }          from '@angular/http';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 
+@Injectable()
+export class HeroService {
+  private heroesUrl = 'api/heroes';  // URL to web API
+  constructor (private http: Http) {}
+  getHeroes(): Observable<Hero[]> {
+    return this.http.get(this.heroesUrl)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+  private extractData(res: Response) {
+    let body = res.json();
+    return body.data || { };
+  }
+```
 
 
-## From bad to good
-Incremental transformation
 
-<img src ="http://1.bp.blogspot.com/-Aaw2GppgxeA/Ve-a1CMqJEI/AAAAAAAAD8w/Epy6-J7VdGY/s320/PracticalRefactoringDemo.gif" >
+# Handling Errors
+```
+  private handleError (error: Response | any) {
+    // In a real world app, you might use a remote logging infrastructure
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
+    console.error(errMsg);
+    return Observable.throw(errMsg);
+  }
+}
+```
 
 
 
-## In steps
-* Each step should not change the functional properties of the system
-* and improve the non-functional ones
+#LAB: Add HTTP clients calling mock REST data
+Include the HttpModule in the main module
 
-* separate adding features from refactoring
-  * don't do both in the same step
+Import Http service in FolderService
 
+Inject Http service instance in the FolderService constructor
 
+Create the folders.json mock data file in the root project folder (or better in a dedicated data folder)
 
-## The Boy Scout Rule
->Leave the campsite a little better than you found it
+Implement the http GET call
 
->Every time you touch some code, leave it a little better
+Convert the result ``toPromise()``
 
-The power of compounding many small changes _in the same direction_
-* 1% time
+Handle the resulting promise
 
 
 
-##More practice and Katas
-* http://codekata.com/
+# More on HTTP: POST
+```
+create(name: string): Observable<Hero> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
 
-* https://www.industriallogic.com/blog/modern-agile/
+    return this.http.post(this.heroesUrl, { name }, options)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+```
 
-# Improvement Culture
-* https://codeascraft.com/2012/05/22/blameless-postmortems/
 
 
+# Encapsulating Backend Calls in a Service Layer
 
-## Learning to learn
-* Kathy Sierra
-* https://www.youtube.com/watch?v=FKTxC9pl-WM

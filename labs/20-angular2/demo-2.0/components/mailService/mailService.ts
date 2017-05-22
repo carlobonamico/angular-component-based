@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
+import {LogService} from "components/log-service/log-service.ts";
 
 /*
     MessageService contains message model
  */
 @Injectable()
 export class MessageService{
+
+    constructor(private logService: LogService)
+    {
+        logService.log("Message Service started");
+    }
     messages = [
             {
                 to: "carlo.bonamico@gmail.com",

@@ -2,9 +2,9 @@
 
 * download the labs from
   * https://github.com/carlobonamico/angular-component-based
-  
+  * angular2 branch
 ```
-git clone https://github.com/carlobonamico/angular-component-based
+git clone -b angular2 https://github.com/carlobonamico/angular-component-based
 ```
 
 or plain "Download Zip" from browser
