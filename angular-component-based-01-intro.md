@@ -143,6 +143,41 @@ To
 * ng-repeat -> *ngFor
 * ng-if -> *ngIf
 
+
+
+## *ngFor
+
+```html
+<ul>
+    <li *ngFor="let item of items">
+        {{item.name}}
+    </li>
+</ul>
+```
+
+
+
+## *ngIf
+
+```html
+<button (click)="show = !show">{{show ? 'hide' : 'show'}}</button>
+    show = {{show}}
+    <br>
+    <div *ngIf="show">Text to show</div>
+```
+
+```typescript
+@Component({
+  selector: 'ng-if-simple',
+  template: '/components/ng-if-simple/ng-if-simple.html'
+})
+class NgIfSimple {
+  show: boolean = true;
+}
+```
+
+
+
 Modules
 * angular.module -> @NgModule classes 
 
@@ -163,7 +198,7 @@ https://angular.io/docs/ts/latest/guide/cheatsheet.html
 
 
 
-## For now
+## Today
 we focus on Component APIs
 
 Additional concepts (module bundling, etc ) are needed before going into production
@@ -173,13 +208,11 @@ Additional help from the official Cheat Sheet during the labs
 
 
 
-## Angular 2 - to probe further (see section 03)
+## Next days
 * Dependency Injection (DI) 
 * Services
 * Http
 * Routing
 * RxJs and Observables
-* ngUpgrade
-  * How to incrementally upgrade an application from 1.5 to 2.0 with ng-upgrade
 
 

@@ -1,5 +1,6 @@
 <span 
-    class="glyphicon glyphicon-star-empty" 
-    
+    class="glyphicon"
+    [ngClass]="{'glyphicon-star-empty' : !entity.starred, 'glyphicon-star' : entity.starred}" 
+    (click)="toggleStar()"
     >
 </span>
