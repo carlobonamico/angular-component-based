@@ -66,3 +66,27 @@ class MyComponent {
 
     route.snapshot.params.id
 
+
+# Resolver
+A resolver takes as inputs
+* route params and possibly state
+* one or more services
+And returns as a result
+* a value
+* a Promise or Observable
+
+Angular then resolves the observable if needed, then puts the result in the data field of the route
+* `` route.snapshot['data']``
+
+# Navigation 
+View 1 -> Can Deactivate Guard (V1) -> Can Activate Guard (V2)-> Resolver -> View 2
+
+# LAB 
+* Create an OrderList component
+* Create an OrderDetailsView component
+* create a mock order.json service
+* add the ``getOrder(id)`` method in the service
+Compare adding the call to orderService.getOrder(id) 
+* in the ngOnInit method of the component
+* in a resolver
+
