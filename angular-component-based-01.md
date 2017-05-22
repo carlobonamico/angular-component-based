@@ -1,17 +1,17 @@
-# The challenge
+# PART 1 - Introduction to Angular 2
 
 
 
 ## TOPICS
 * How does our code become unmanageable? A practical example
 * Issues and challenges in developing complex / large HTML5 applications
-* Huge controllers and “scope soup”
+* Huge controllers and "scope soup"
 
 
 
 ## Feature Pressure
 
-## Working Prototype != Production-Ready
+### Working Prototype != Production-Ready
 
 
 
@@ -25,12 +25,15 @@
 
 
 
-## What can we do about it? 
+<img src="images/codemotion/4.png" >
 
 
 
-## To Learn More
-TODO - link or integrate the Codemotion presentation
+<img src="images/codemotion/5.png" >
+
+
+
+<img src="images/codemotion/6.png" >
 
 
 
@@ -39,26 +42,20 @@ TODO - link or integrate the Codemotion presentation
 
 
 ## TOPICS
-* From huge controllers and “scope soup” to Component-based Uis
+* From huge controllers and "scope soup" to Component-based Uis
 * How to identify application Components
 
 
 
 # Thinking in Components
 * Learn to split a single "View" or "Page" from the user perspective into a hierarchy of Components
-From huge controllers and “scope soup” to Component-based Uis
+From huge controllers and "scope soup" to Component-based Uis
 * How to identify application Components
 
 
 
-## What is a UI Component? 
-Very rough definition 
-* a part of an application / website which includes
-  * UI elements
-  * interaction logic
-  * and (possibly) Business logic
 
-More ideas? 
+<img src="images/codemotion/7.png" >
 
 
 
@@ -87,18 +84,25 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 * Identify key inputs and outputs for each component
 * Now go find even more components
 
-* https://drive.google.com/drive/u/0/folders/0B-Bogp8tUho_bDh6SkFOMXEwa1E
+
+
+<img src="images/codemotion/9.png" >
 
 
 
-## Advantages in short
-* More reuse
-* more Encapsulation
-* easier collaboration in the team
+<img src="images/codemotion/10.png" >
 
 
 
-## References
+<img src="images/codemotion/17.png" >
+
+
+
+<img src="images/codemotion/22.png" >
+
+
+
+<img src="images/codemotion/23.png" >
 
 
 
@@ -121,26 +125,22 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 
-## Enter Angular 1.5
-* Components as (almost) first class citizens
-* embed consolidated Best Practices into the framework
-  * controllerAs
-
+## Enter Angular 2
+* The only way is to do Components
+* even the application is a component
 
 * big syntax simplification
   * improved readability
   * less effort
 
-* goal: make creating components so easy that you want to do it everywhere
-
-* Truly first class support in Angular2
+* Typescript
 
 
 
-## Angular 1.5 Components API
-* declaring components ``angular.component()``
-* defining the component interface with ``bindings``
-* manage the component lifecycle with ``$onInit`` ``$onChange`` and ``$onDestroy``
+## Angular 2 Components API
+* declaring components ``@Component`` 
+* defining the component interface with ``inputs, outputs`` inside ``@Component`` annotation
+* manage the component lifecycle with ``ngOnInit``, ``ngOnChanges`` and ``ngOnDestroy``
 * linking components with each other
 
 _as always, embracing HTML_ 
@@ -148,8 +148,25 @@ _as always, embracing HTML_
 
 
 ## Aside - Components vs HTML elements
-PLNKR or demo
 
+```html
+  <nav class="page-left-menu">
+            
+      <section class="compose-toolbar">
+          <button (click)="compose()" class="btn btn-danger">Compose</button>
+      </section>
+      
+      <section class="folder-list">
+          
+          <folder-list 
+              [folders]="folders" 
+              [defaultFolder]="defaultFolder"
+              (selected)="selectFolder($event.folder)">
+          </folder-list>
+          
+      </section>
+  </nav>
+```
 How can it possibly work? 
 
 
@@ -165,15 +182,17 @@ Angular builds on that and tries to integrate its component model with HTML as m
 
 
 ## Our first component
-TODO - translate to Angular 2 
 
 A minimal ``<hello></hello>`` component
 
-```js
-angular.module("helloApp").component("hello",
-  {
-    template: "<h3>Hello World</h3>
-  });
+```typescript
+import { Component } from '@angular/core';
+
+@Component({selector: 'hello', 
+    template: "<h3>Hello World</h3>",
+})
+export class HelloWorldComponent  {}
+
 ```
 
 in the page
@@ -188,23 +207,27 @@ in the page
 ## LAB 01
 Create the ``<mail-logo>`` component
 
-Preliminary steps: 
-* create a ``mailLogo`` folder under ``components``
-* create a ``mailLogo.html`` within ``mailLogo``
-* create a ``mailLogo.component.js`` within ``mailLogo``
-* add a ``<script>`` reference to ``mailLogo.component.js`` in ``index.html``
+In the base application inside the labs folder you will find the ``mail-logo`` folder
+containing an empty scheleton of component
 
-Steps: 
-* complete the component definition 
+* the html template is already done
+* complete the component definition on mail-logo.ts
+* import the component in the app.ts file.
+
 
 Remember: TEST the page at each step
 
 
 
-## The importance of Naming conventions
-* You already know about this
-* even more important in Javascript where you have less support from the Type-system and language
+## Tips
+* use ``templateUrl`` into the Component annotation to address the right template
+* import the component into app.ts
 
+```typescript 
+import {MailLogoComponent} from "components/mail-logo/mail-logo.ts"
+```
+
+* add the component to the module declarations (app.ts)
 
 
 
@@ -215,7 +238,7 @@ Remember: TEST the page at each step
 * some HTML
   * inline, with ``template``
   * in an external file, with ``templateUrl``
-  * dynamic (with a ``function()``)
+  * dynamic (inputs, outputs)
 * the Component Class
 
 
@@ -226,6 +249,7 @@ This is already useful to reduce duplication in our pages, but to be useful, the
 
 
 ## The main page controller
+Who is passing inputs to the other components?
 Role of the ``MailView`` component
 * interact with backend services
 * provide data to the individual components
@@ -236,37 +260,6 @@ A look at the code...
 
 ## TIP
 Separate Layout from components, to increase reuse
-
-
-
-## The mail-message-list component
-Manages
-* display
-* navigation within the list
-** current message
-** Next message action
-** Previous message action
-
-
-
-## Adding a controller
-TODO - translate to Angular 2 
-
-```js
-angular.module("mailApp").component("messageList",
-  {
-    templateUrl: "components/messageList/messageList.html",
-    controller: MessageListController //or inline function, if simple
-    controllerAs: "messageListCtrl" //default is $ctrl
-  });
-```
-
-
-
-## Where to put the controller
-* In the same file, if simple
-* in a separate ``messageList.controller.js`` file if more complex
-* or agree on a standard convention for your team
 
 
 
@@ -299,9 +292,7 @@ import {Input, Output, EventEmitter} from '@angular/core';
 
 @Component({selector: 'message-viewer', 
     templateUrl : "components/message-viewer/message-viewer.html",
-    inputs : ["message"],
-    outputs: ["onReply","onForward","onDelete"],
-    directives: ["common-star"]
+    inputs : ["message"]
 })
 export class MessageViewerComponent  {
     message; 
@@ -309,95 +300,89 @@ export class MessageViewerComponent  {
 
 
 
-## In the index.html
-TODO - translate to Angular 2 
+## In the mail-view.html
 
 ```html
-  <div ng-controller="MailController as mailCtrl">
+  <div>
 
     <section class="main-pane">
-      <message-list messages="mailCtrl.messages"></message-list>
+      <message-list 
+                [messages]="messages">
+            </message-list>
     </section>
   </div>
 
 ```
 
 
-## In the component definition 
-TODO - translate to Angular 2 
 
-```js
-angular.module("mailApp").component("messageList",
-  {
+## In the component definition 
+
+```typescript
+import {Component} from '@angular/core';
+import {Input, Output, EventEmitter} from '@angular/core';
+
+@Component({selector: 'message-list', 
+    templateUrl : "components/message-list/message-list.html",
+    inputs : ["messages"]
+
+})
+export class MessageListComponent  {
+    messages; 
     ...
-    bindings: {
-      messages: "<messages" //or just "<" if the name is the same
-    }
-  });
 ```
-This is automatically available as a ``messages`` field in the controller
-```js
-  if (this.messages.length >0)
+This is automatically available as a ``messages`` field in the component instance
+```typescript
+  if (this.messages.length >0){
     //doSomething
 ```
 
-
-
 ## In the component html
-TODO - translate to Angular 2 
 
 ```html
-  <div ng-repeat="message in messageListController.messages">
+  <div *ngFor="let message of messages">
 
   </div>
 ``` 
 
 
 
-
-# Message List component
-Declare the output events in ``MessageViewerComponent.ts``
-* reply
-* forward
-* delete
-
-Handle the button click events and emit the events
-
-In the parent html (mail-view.html)
-* bind the events to the ``MailViewComponent`` class methods
-
-In the ``mail-view.html`` conditionally display the compose section when reply / forward is selected
+## The mail-message-list component
+Manages
+* display
+* navigation within the list
+  * current message
+  * Next message action
+  * Previous message action
 
 
 
 ## LAB 02
 Define the ``<message-viewer>`` component
 
+In the base application inside the labs folder you will find the ``message-viewer`` folder
+containing an empty scheleton of component
+
 Preliminary steps: 
-* create a ``message-viewer`` folder under ``components``
-* create a ``message-viewer.html`` within ``message-viewer``
-* create a ``message-viewer.component.js`` within ``message-viewer``
-* add a ``<script>`` reference to ``message-viewer.component.js`` in ``index.html``
+* complete the ``message-viewer`` component to handle 
+  * message input
+
+* handle click events 
+  * reply
+  * forward
+  * delete
+* and log the function call
+
+* import the component in the app.ts file.
+
+
 
 Steps: 
-* move the mail message html into ``message-viewer.html``
-* complete the component definition in ``message-viewer.component.js``, passing in the ``message`` parameter
-* link the two components in ``message-list.html``
+* edit the mail message html into ``message-viewer.html``
+* complete the component definition in ``message-viewer.ts``, passing in the ``message`` parameter
+* use ``messages[0]`` from the ``mail-view`` component
 
 Remember: TEST the page at each step - __F12 is your friend__
-
-
-
-## Aside - simpler parameters
-TODO - translate to Angular 2 
-
-With the ``@`` binding 
-* Passed to the component on initialization
-* can be computed dynamically, but are not watched by default
-
-Typical examples: 
-* size
-* themes or css styles
 
 
 
@@ -440,13 +425,12 @@ When a user selects a message, two different thing must take place:
 
 
 ## In the component  
-TODO - translate to Angular 2 
 
 ```html
-  <div ng-click="messageListCtrl.select(message)"> {{message.subject}}} </div>
+  <div (click)="select(message)"> {{message.subject}}} </div>
 ```
 
-```js
+```typescript
   this.select = function (selectedMessage){
      this.currentMessage = selectedMessage; 
   }
@@ -455,57 +439,75 @@ TODO - translate to Angular 2
 
 
 ## Outside the component
-TODO - translate to Angular 2 
 
 We would like to be notified
 ```html
   <message-list 
-    messages="mailCtrl.messages"
-    on-select="mailCtrl.messageSelected(message)"
-  >
+      [messages]="messages"
+      (onCurrentMessageChanged)="selectCurrentMessage($event.message)"
+
+      >
   </message-list>
 ```
 
 
 
-## We need three steps to do this
-TODO - translate to Angular 2 
+## We need two steps to do this
 
 1) declare the event in the bindings
-```js
-angular.module("mailApp").component("messageList",
-  {
-    ...
-    bindings: {
-      onSelected: "&" 
-    }
-  });
+```typescript
+import {Component} from '@angular/core';
+import {Input, Output, EventEmitter} from '@angular/core';
+
+@Component({selector: 'message-list', 
+    templateUrl : "components/message-list/message-list.html",
+    inputs : ["messages"],
+    outputs: ["onCurrentMessageChanged"]
+
+})
+export class MessageListComponent  {
+    messages; 
+    currentMessageIndex = 0;
+    currentMessage;
+
+    onCurrentMessageChanged = new EventEmitter<any>(); 
 ```
-This injects an ``onSelected`` event callback in the controller instance
+This injects an ``onCurrentMessageChanged`` event callback in the component instance
+
+
 
 2) call the callback when the message is selected within the component
- ```js
-  this.select = function (selectedMessage){
-     this.currentMessage = selectedMessage; 
-     this.onSelected(selectedMessage); 
-  }
+ ```typescript
+    setCurrentMessage(index)
+    {
+        this.currentMessage = this.messages[index];
+        this.currentMessageIndex = index; 
+
+        this.onCurrentMessageChanged.emit({
+            message: this.currentMessage
+        });
+    }
+    ...
+
 ```
 
 
 
-## This will NOT work, unless you remember step 3
-TODO - translate to Angular 2 
+## Let's change the message-list behaviour 
+adding``onCurrentMessageChanged`` outputs
 
-3) explicitely declare the event object 
- ```javascript
-  this.select = function (selectedMessage){
-     this.currentMessage = selectedMessage; 
-     this.onSelected({
-       message: selectedMessage
-     }); 
-  }
-```
 
+
+# Lab 02 (2)
+Declare the output events in ``MessageViewerComponent.ts``
+* reply
+* forward
+* delete
+
+Handle the button click events and emit the events
+
+In the parent html (mail-view.html)
+* bind the events to the ``MailViewComponent`` class methods
 
 
 
@@ -532,6 +534,15 @@ export class ConfirmComponent {
 ```
 
 
+
+## Compodoc
+
+```
+compodoc -p ./tsconfig.json -d docs demo-2.0/
+```
+
+
+
 ## LAB 03
 Implement the ``<folder-list>`` component
 * receive the list of folders from the main MailController 
@@ -542,49 +553,35 @@ Implement the ``<folder-list>`` component
 
 
 
-## LAB steps
-Define the ``<folder-list>`` component
-
-Preliminary steps: 
-* create a ``folder-list`` folder under ``components``
-* create a ``folder-list.html`` within ``folder-list``
-* create a ``folder-list.component.js`` within ``folder-list``
-* add a ``<script>`` reference to ``folder-list.component.js`` in ``index.html``
-
-Steps: 
-* move the UI in ``folder-list.html``
-* complete the component definition in ``folder-list.component.js``
-  * passing in the ``folders`` parameter
-  * passing the ``on-selected`` callback
-* link the components in ``index.html``
-
-Remember: TEST the page at each step - __F12 is your friend__
-
-
-
 # FolderList component
 Declaring a Component
-1) import Component Class in app.ts
-2) add to ``declarations: []`` section 
+1. import Component Class in app.ts
 
-3) completing the declaration
+2. add to ``declarations: []`` section 
+
+3. completing the declaration
     * define metadata
     * complete html template
     * activate the selected class on click
 
 
+Remember: TEST the page at each step - __F12 is your friend__
+
+
+
 Declaring outputs
 
-Instantiate event Emitter
+1. Instantiate event Emitter
 
-Handle click on folder
+2. Handle click on folder
 * initially, just log it
 
-Emit the event on click
+3. Emit the event on click
 
-Bind the event in the parent html template (mail view)
+4. Bind the event in the parent html template (mail view)
 
-Implement the ``selectFolder()`` method in the parent component
+5. Implement the ``selectFolder()`` method in the parent component
+
 
 
 ## LAB extra 
@@ -615,7 +612,7 @@ See also the Clean Code principles on SRP and Class design
 
 
 
-#TOPICS 
+# TOPICS 
 * How to interconnect multiple collaborating Components to achieve complex UI interactions
 
 
@@ -635,37 +632,16 @@ Components form a hierarchy
 
 We achieve complex behaviours by collaboration of many simpler components
 
-## Examples
-
 
 
 # Component-based UI Architecture
-* “Smart”, “dumb” and “stateless” components
+* "Smart", "dumb" and "stateless" components
 
 
-
-# Two way databinding vs one-way dataflow
-* When to use two-way DataBinding and when One-Way Data Flow
-<img src="images/phone-wires.jpg" >
-
-* events vs outputs vs services
-
-
-
-## Lab 05
-Integrate the mail-composer component
-
-Include the component in the app module
-
-Declare inputs
-* draft
-
-Declare output events
-* send, cancel, and optionally save
-
-Include it in the parent html template
 
 Bind the inputs and outputs
+
+In the ``mail-view.html`` conditionally display the compose section when reply / forward is selected
 
 Add the message reply logic to mail-view.ts
 * sender becomes to field
@@ -703,7 +679,7 @@ Add the message reply logic to mail-view.ts
 * Try printing it
 ```html
   {{ userForm.valid }}
-  <pre>{{ userForm | json }}</pre>
+  <pre>{{ userForm.valid | json }}</pre>
 ```
 
 
@@ -756,6 +732,7 @@ Add the message reply logic to mail-view.ts
 ```
 
 
+
 # Forms
 
 ngModel
@@ -774,6 +751,21 @@ Display a validation error message
 
 
 
+## Lab 05
+Integrate the mail-composer component
+
+Include the component in the app module
+
+Declare inputs
+* draft
+
+Declare output events
+* send, cancel, and optionally save
+
+Include it in the parent html template
+
+
+
 # Lifecycle callbacks
 
 ## TOPICS
@@ -784,32 +776,65 @@ Display a validation error message
 
 
 
-## $onInit
-## $onChanges
-Example: display the count of unread messages
+## ngOnInit
+Called when the component is initialized
+```typescript
+@Component({selector: 'my-cmp', template: `...`})
+class MyComponent implements OnInit {
+  ngOnInit() {
+    // ...
+  }
+}
+```
 
-## $onDestroy
-Called when the scope of the component is 
-## $postLink
+
+
+## ngOnChanges
+Is called right after the data-bound properties have been checked and before view and content children are checked if at least one of them has changed. The changes parameter contains the changed properties
+
+```typescript
+@Component({selector: 'my-cmp', template: `...`})
+class MyComponent implements OnChanges {
+  @Input()
+  prop: number;
+  ngOnChanges(changes: SimpleChanges) {
+    // changes.prop contains the old and the new value...
+  }
+}
+```
+
+
+
+## ngOnDestroy
+Is typically used for any custom cleanup that needs to occur when the instance is destroyed.
+
+```typescript
+@Component({selector: 'my-cmp', template: `...`})
+class MyComponent implements OnDestroy {
+  ngOnDestroy() {
+    // ...
+  }
+}
+
+```
+
 
 
 ## Lab 04
-Develop the message-list component
+Into the message-list component
 
-Implement the $OnChanges callback
+Implement the ngOnChanges callback
 
 
 
 ## To learn more
 
-# Lifecycle Hooks
-## ngOnInit
-## ngOnChanges
-* managing changes in arrays
+https://angular.io/docs/ts/latest/guide/lifecycle-hooks.html
+
 https://teropa.info/blog/2016/03/06/writing-an-angular-2-template-directive.html
 
 
-
+Note:
 # Create a datepicker
 
 CalendarService 
@@ -838,6 +863,7 @@ Close the day list on click and update hte current date
 Emit the selectedDateChange even
 
 
+
 ## Lab 06
 Integrate the mail-composer component with the reply button in message viewer
 
@@ -851,6 +877,16 @@ typescriptOptions: {
 }
 ```
 in `tsconfig.json` and/or `system.conf.js`
+
+
+
+# Services
+
+#### Lazily instantiated
+  Angular only instantiates a service when an application component depends on it.
+#### Singletons 
+  Each component dependent on a service gets a reference to the single instance generated by the service factory.
+#### Injected in components automatically
 
 
 
@@ -881,7 +917,7 @@ class MessageService {
 
 
 
-#Services
+# Services
 Create a TemplateService class
 
 Create the getReplyTemplate() method
@@ -896,7 +932,7 @@ Configure the provider in the app module and re-test with Dependency Injection
 
 
 
-#FolderService
+# FolderService
 Create the FolderService class
 
 methods
@@ -985,6 +1021,7 @@ And resolving it later
  
 
 
+
 # GET
 ```
 import { Http, Response }          from '@angular/http';
@@ -1028,7 +1065,7 @@ export class HeroService {
 
 
 
-#LAB: Add HTTP clients calling mock REST data
+# LAB: Add HTTP clients calling mock REST data
 Include the HttpModule in the main module
 
 Import Http service in FolderService
