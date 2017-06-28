@@ -33,8 +33,50 @@ https://www.youtube.com/watch?v=lNKXTlCOGEc
 
 
 
-### Let's see it in action
-* http://rxmarbles.com/
+# Observable's functions
+* next(value): called every time a new event is generated
+* error(err): called when an error occurs. It will terminate the observer (so no more events may be received)
+* complete(): called when the observer complete the procedure (so no more events may be received).
+
+
+
+# Let's try something
+
+https://jsfiddle.net/8ptLorpj/
+
+
+
+# Consuming events
+```
+    source.subscribe(
+          event => { console.log("Event received "+event); },
+          error =>  this.errorMessage = <any>error);
+```
+
+Remember to ``unsubscribe`` the stream at the end to prevent memory leaks
+
+
+
+# Without using => functions
+
+```
+var observer = {
+	next: function(value){
+  	console.log(value);
+  },
+  error: function(error){
+  	console.error(error);
+  },
+  complete: function(){
+  	console.log('Observer completed');
+  }
+};
+
+Rx.Observable.fromEvent(button,'click')
+.subscribe(observer)
+```
+
+https://jsfiddle.net/kq1cr1ns/
 
 
 
@@ -42,7 +84,7 @@ https://www.youtube.com/watch?v=lNKXTlCOGEc
 A stream containing a single value
 ```
 var source = Rx.Observable
-  .just({name: "Carlo"});
+  .of({name: "Carlo"});
 ```
 
 A number sequence as a stream
@@ -63,29 +105,36 @@ var source = Rx.Observable.from(array);
 
 
 
-# Consuming events
+# Creating an Observable manually
+
 ```
-    source.subscribe(
-          event => { console.log("Event received "+event); },
-          error =>  this.errorMessage = <any>error);
+Rx.Observable.create(function(obs){
+	obs.next('Value emitted');
+  setTimeout(function(){
+	  obs.complete();
+
+	},2000);
+  //obs.error('Error');
+  obs.next('Value emitted 2');
+}).subscribe(observer) 
 ```
 
-Remember to ``unsubscribe`` the stream at the end to prevent memory leaks
+https://jsfiddle.net/agjemjxk/
 
 
 
-# Programmatically generate events
+# Unsubscribe
 ```
-var source = Rx.Observable.create(observer => {
-  // Yield a two values and complete
-  observer.onNext(42);
-  observer.onNext(45);
-  
-  observer.onCompleted();
-  // Any cleanup logic might go here
-  return () => console.log('disposed')
-});
+
+var sub1 = Rx.Observable.fromEvent(button,'click')
+.subscribe(observer)
+
+setTimeout(function(){
+	sub1.unsubscribe();
+},3000)
 ```
+
+https://jsfiddle.net/9q297vo7/
 
 https://xgrommx.github.io/rx-book/content/getting_started_with_rxjs/creating_and_querying_observable_sequences/creating_and_subscribing_to_simple_observable_sequences.html
 
@@ -105,16 +154,108 @@ var subscription = source.subscribe(
 
 
 # Publish/Subscribe with Subjects
+
+A subject is an observer... observable
+
 * http://reactivex.io/documentation/subject.html
 
 
 
-# Combining and processing Streams
+# Using subjects
+
+```
+subject.subscribe({
+	next:function(value){
+  	console.log('1° subscriber ' + value);
+  },
+  error:function(error){
+  	console.error(error);
+  },
+  complete:function(){
+  	console.log('completed');
+  }
+});
+
+subject.subscribe({
+	next:function(value){
+  	console.log('2° subscriber ' + value);
+  }
+});
+
+subject.next('test');
+
+```
+
+https://jsfiddle.net/w6jy1fyx/1/
+
+
+
+# Combining and processing Streams: Operators
 * http://reactivex.io/documentation/operators.html
 * https://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html
 
 
 * https://netbasal.com/rxjs-six-operators-that-you-must-know-5ed3b6e238a0
+
+
+
+# Map Operator
+```
+var observable = Rx.Observable.interval(1000);
+
+var observer = {
+	next: function(value){
+  	console.log(value);
+  }
+};
+
+observable.map(
+	(x) => 'Value is '+ x
+).subscribe(observer);
+```
+
+https://jsfiddle.net/zv1yt9bq/
+
+
+
+# ThrottleTime Operator
+```
+var observable = Rx.Observable.interval(1000);
+
+var observer = {
+	next: function(value){
+  	console.log(value);
+  }
+};
+
+observable.map(
+	(x) => 'Value is '+ x
+).throttleTime(3000).subscribe(observer);
+```
+
+https://jsfiddle.net/zv1yt9bq/
+
+
+
+### Let's see it in action
+* http://rxmarbles.com/
+
+
+
+### Another example
+* Event Demo
+
+https://github.com/carlobonamico/angular-event-streams-lab
+
+
+
+# LAB
+Use JSFiddle at https://jsfiddle.net/8ptLorpj/ to try ReactiveX
+
+* Create an observable using one of the one available on the documentation
+* Create two or more kind of observers subscribing the observable with different operators (even chained).
+
+For instance the first observer using a map operator, the second using a debounce and a filter.
 
 
 
@@ -162,10 +303,21 @@ export class HeroService {
 ```
 
 
+
 # Stream composition
 At this point, if you want to add retry on error, just add 
 ```
 .retry(3);
+```
+
+
+
+# On the other side...
+```
+this.heroService.getHeroes()
+    .subscribe(
+      heroes => this.heroes = heroes,
+      error =>  this.errorMessage = <any>error);
 ```
 
 
@@ -188,6 +340,19 @@ UI
 })
 ```
 
+Async pipe?
+
+
+
+# Async Pipe
+https://angular.io/docs/ts/latest/api/common/index/AsyncPipe-pipe.html
+
+* The async pipe subscribes to an Observable or Promise and returns the latest value it has emitted. 
+* When a new value is emitted, the async pipe marks the component to be checked for changes. 
+* When the component gets destroyed, the async pipe unsubscribes automatically to avoid potential memory leaks.
+
+https://blog.thoughtram.io/angular/2016/01/07/taking-advantage-of-observables-in-angular2-pt2.html
+
 
 
 # Piping requests
@@ -208,6 +373,16 @@ export class WikiSmartComponent implements OnInit {
 
 
 
+## Explaining the example
+
+ * debounceTime waits for the user to stop typing for at least 300 milliseconds.
+
+ * distinctUntilChanged ensures that the service is called only when the new search term is different from the previous search term.
+
+ *  he switchMap calls the WikipediaService with a fresh, debounced search term and coordinates the stream(s) of service response.
+
+
+
 # How do I...
 https://xgrommx.github.io/rx-book/content/getting_started_with_rxjs/creating_and_querying_observable_sequences/operators_by_category.html
 https://xgrommx.github.io/rx-book/content/which_operator_do_i_use/instance_operators.html
@@ -225,23 +400,25 @@ Observable.prototype.toJSON = toJSON;
 
 
 
-# Async Pipe
-https://angular.io/docs/ts/latest/api/common/index/AsyncPipe-pipe.html
+# LAB
 
-* The async pipe subscribes to an Observable or Promise and returns the latest value it has emitted. 
-* When a new value is emitted, the async pipe marks the component to be checked for changes. 
-* When the component gets destroyed, the async pipe unsubscribes automatically to avoid potential memory leaks.
+* call the Http service using Observable instead of Promises
 
-https://blog.thoughtram.io/angular/2016/01/07/taking-advantage-of-observables-in-angular2-pt2.html
+```
+  this.messageService.getHttpObservableMessages()
+  .subscribe(
+      res => this.setMessages(res.json()),
+      error => this.manageError(error)
+  );
+
+```
 
 
 
-# The conclusion
-Split between 
-* simple, stateless, synchronous UI components
-* smarter, stateful, Business Logic components, dealing with asynchronicity
+# LAB
 
-And link them with the async pipe
+* Add a search field to the application.
+* Use operators (and a subject) to send requests with a debounce time of 2 seconds.
 
 
 
@@ -357,7 +534,7 @@ this.router.navigate(['/message', message.id]);
 
 
 
-#Query Parameters
+# Query Parameters
 Use the [queryParams] directive along with [routerLink]
 ```
 <a [routerLink]="['messages']" [queryParams]="{ page: 99 }">Go to Page 99</a>
@@ -401,37 +578,52 @@ ngOnInit() {
 
 
 
-# Programmatic navigation
-Have a Router service injected in your component
-```
-private router: Router;
-
-```
-Then 
-
-```
-router.go()
-```
-
-
-
 # Resolvers
+
+https://blog.thoughtram.io/angular/2016/10/10/resolving-route-data-in-angular-2.html
+
 ```
 
 @Injectable()
 export class MessageDetailResolver implements Resolve<Message> {
-  constructor(private cs: MessageService, private router: Router) {}
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Message> {
+  constructor(private messageService: MessageService, private router: Router) {}
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Message> {
     let id = route.params['id'];
     
-    return this.cs.getMessage(id).then(message => {
-      if (message) {
-        return message;
-      } else { // id not found
-        this.router.navigate(['/messages']);
-        return null;
-      }
-    });
+    return this.messageService.getHttpObservableMessages(id); //returns an observable
+  }
+}
+```
+
+
+
+# Resolvers on routing configuration
+```
+export const AppRoutes: Routes = [
+  ...
+  { 
+    path: 'message/:id',
+    component: MessageDetailComponent,
+    resolve: {
+      message: MessageDetailResolver
+    }
+  }
+];
+```
+
+
+
+# Resolvers on component
+```
+@Component()
+export class MessageDetailComponent implements OnInit {
+
+  message;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.message = this.route.snapshot.data['message'];
   }
 }
 ```
@@ -526,7 +718,188 @@ const crisisCenterRoutes: Routes = [
 
 
 # LAB
-* moving to angular cli
+
+* clone the routing demo workspace
+
+https://github.com/mattex83/routing-demo
+
+* git checkout empty-app
+
+* Create three components ``<app-login>``, ``<app-not-found>`` and ``<app-main>``
+* Use a guard to activate the ``<app-main>`` component when the user credentials are good
+  ** just simulate it with fixed values
+
+* put the ``<router-outlet>`` component instead a ``<app-root>`` component
+
+
+
+# Lazy Loading of a module
+
+https://angular-2-training-book.rangle.io/handout/modules/lazy-loading-module.html
+
+https://plnkr.co/edit/vpCqRHDAj7V6mlN1AknN?p=preview
+
+
+
+# LAB
+
+Refactor the application: 
+* keep <app-login> component and <app-not-found> component in the application module
+* put other component and eventually its dependencies into a new module called *BodyModule*
+* Lazy load the module when the navigation is performed
+
+
+
+# how to access dom from ts
+
+* sometimes we need to access the DOM
+* for instance to wrap a third party JS library in an angular component
+* or to make some directives
+
+
+
+# ElementRef
+
+THe following example prints the html of the component itself
+
+```
+import { AfterContentInit, Component, ElementRef } from '@angular/core';
+
+@Component({
+    selector: 'app-root',
+    template: `
+    <h1>My App</h1>
+    <pre>
+      <code>{{ node }}</code>
+    </pre>
+  `
+})
+export class AppComponent implements AfterContentInit {
+  node: string;
+
+  constructor(private elementRef: ElementRef) { }
+
+  ngAfterContentInit() {
+    const tmp = document.createElement('div');
+    const el = this.elementRef.nativeElement.cloneNode(true);
+
+    tmp.appendChild(el);
+    this.node = tmp.innerHTML;
+  }
+
+}
+```
+
+
+
+# An example of Directive
+```
+import { Directive, ElementRef, Input } from '@angular/core';
+
+@Directive({ selector: '[myHighlight]' })
+export class HighlightDirective {
+    constructor(el: ElementRef) {
+       el.nativeElement.style.backgroundColor = 'yellow';
+    }
+}
+```
+
+
+
+# i18n
+
+
+
+# How the process works?
+
+* Mark static text messages in your component templates for translation.
+
+* An angular i18n tool extracts the marked messages into an industry standard translation source file.
+
+* A translator edits that file, translating the extracted text messages into the target language, and returns the file to you.
+
+* The Angular compiler imports the completed translation files, replaces the original messages with translated text, and generates a new version of the application in the target language.
+
+### You need to build and deploy a separate version of the application for each supported language
+
+
+
+# i18n custom attribute
+```
+<h1 i18n>Hello i18n!</h1>
+```
+
+
+
+# add a description
+
+```
+<h1 i18n="An introduction header for this sample">Hello i18n!</h1>
+```
+
+
+
+# add a meaning
+
+```
+<h1 i18n="site header|An introduction header for this sample">Hello i18n!</h1>
+```
+
+
+
+# add an ID
+
+On the generated xml file we will have
+```
+<trans-unit id="ba0cc104d3d69bf669f97b8d96a4c5d8d9559aa3" datatype="html">
+```
+
+the id may change on every export procedure, to avoid it
+```
+<h1 i18n="@@introductionHeader">Hello i18n!</h1>
+```
+
+the trans-unit will become 
+```
+<trans-unit id="introductionHeader" datatype="html">
+```
+
+
+
+# this works only with text inside tags?
+
+What if I don't want to add a tag with the text inside?
+```
+<ng-container i18n>I don't output any element</ng-container>
+```
+
+
+
+# Handle single or plural
+```
+<span i18n>{wolves, plural, =0 {no wolves} =1 {one wolf} =2 {two wolves} other {a wolf pack}}</span>
+```
+
+
+
+# How to extract i18n file
+```
+ng xi18n -op locale -of messages.en.xlf
+```
+
+
+
+# How to build an i18n app
+```
+ng build --prod --i18n-file locale/messages.it.xlf --locale it --i18n-format xlf
+```
+
+
+
+# LAB
+
+* Add i18n feature into the routing app.
+* extract the xlf file, compile the italian trnaslation and build an italian version of the application
 
 
 
@@ -546,7 +919,7 @@ https://plnkr.co/edit/sIi9tWbekqAbxqwZEwkX?p=preview
 
 
 
-##Concept 1 - Naming
+## Concept 1 - Naming
 -reading code vs writing code
 - what is a good name?
 - same but different: the importance of conventions

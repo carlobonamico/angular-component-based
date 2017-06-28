@@ -869,6 +869,57 @@ Integrate the mail-composer component with the reply button in message viewer
 
 
 
+# Improve productivity
+
+http://blog.mgechev.com/2017/04/23/angular-tooling-codelyzer-angular-cli-ngrev/
+
+
+
+# Angular CLI
+https://github.com/angular/angular-cli
+
+Let's try it
+
+
+
+# How to configure an application
+
+* before AOT: using environment files
+* after AOT:
+- Using a custom js file in the index.html with some global variables to configure the application
+- Using a server side configuration retrived during the application startup.
+
+
+
+# packaging
+
+* Angular-cli allows to create a build package for an entire application
+```
+ng build --prod
+```
+
+But... no methods to build a library... at the moment!
+
+https://github.com/angular/angular-cli/issues/6510
+
+
+
+# packaging a library
+
+* The google way:
+https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview#
+
+* A simple application you can use to maka a library
+https://github.com/filipesilva/angular-quickstart-lib
+
+* a packager tool
+https://github.com/dherges/ng-packagr
+
+* a Yeoman generator
+https://github.com/jvandemo/generator-angular2-library
+
+
+
 # Dependency Injection Recipe
 * make sure annotation support is enabled
 ```json
