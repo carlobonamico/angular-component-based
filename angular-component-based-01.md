@@ -1,4 +1,4 @@
-# PART 1 - Introduction to Angular 2
+# PART 1 - Introduction to Angular
 
 
 
@@ -111,8 +111,8 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 ## TOPICS
-* Angular 2 Component model and API
-* How to develop a simple Component in Angular 2
+* Angular Component model and API
+* How to develop a simple Component in Angular
 
 
 
@@ -125,7 +125,7 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 
-## Enter Angular 2
+## Enter Angular
 * The only way is to do Components
 * even the application is a component
 
@@ -137,7 +137,7 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 
-## Angular 2 Components API
+## Angular Components API
 * declaring components ``@Component`` 
 * defining the component interface with ``inputs, outputs`` inside ``@Component`` annotation
 * manage the component lifecycle with ``ngOnInit``, ``ngOnChanges`` and ``ngOnDestroy``
@@ -515,7 +515,6 @@ In the parent html (mail-view.html)
 ## Propagating output from Components
 ```
 @Component({
-  moduleId: module.id,
   selector: 'app-confirm',
   templateUrl: 'confirm.component.html'
 })
@@ -1067,30 +1066,29 @@ And resolving it later
 * https://angular.io/docs/ts/latest/guide/server-communication.html
 
 ### SETUP
-* import ```import { HttpModule } from '@angular/http';```
-* add HttpModule to main NgModule
+* import ```import { HttpClientModule } from '@angular/common/http';```
+* add HttpClientModule to main NgModule
  
 
 
 
 # GET
 ```
-import { Http, Response }          from '@angular/http';
+import { HttpClient, Response }          from '@angular/common/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HeroService {
   private heroesUrl = 'api/heroes';  // URL to web API
-  constructor (private http: Http) {}
+  constructor (private http: HttpClient) {}
   getHeroes(): Observable<Hero[]> {
-    return this.http.get(this.heroesUrl)
+    return this.http<any>.get(this.heroesUrl)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
-  private extractData(res: Response) {
-    let body = res.json();
-    return body.data || { };
+  private extractData(res:any) {
+    return res.data || { };
   }
 ```
 
@@ -1117,11 +1115,11 @@ export class HeroService {
 
 
 # LAB: Add HTTP clients calling mock REST data
-Include the HttpModule in the main module
+Include the HttpClientModule in the main module
 
-Import Http service in FolderService
+Import HttpClient service in FolderService
 
-Inject Http service instance in the FolderService constructor
+Inject HttpClient service instance in the FolderService constructor
 
 Create the folders.json mock data file in the root project folder (or better in a dedicated data folder)
 
@@ -1139,7 +1137,7 @@ create(name: string): Observable<Hero> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.heroesUrl, { name }, options)
+    return this.http<any>.post(this.heroesUrl, { name }, options)
                     .map(this.extractData)
                     .catch(this.handleError);
   }

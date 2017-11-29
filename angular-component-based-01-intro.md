@@ -1,14 +1,14 @@
-# PART 1 - Introduction to Angular 2
+# PART 1 - Introduction to Angular
 
 
 
 ## TOPICS
-* From AngularJS 1.5 to Angular 2.0: syntax changes, 
+* From AngularJS 1.5 to Angular >2.0: syntax changes, 
 * but Component-based architecture remains
 
 
 
-## Angular2 Key Concepts
+## Angular Key Concepts
 Re-implementation of the framework
 * build on best practices
 * target a wider range of platforms
@@ -20,7 +20,7 @@ Re-implementation of the framework
 
 
 
-## Angular 2
+## Angular
 Strongly Component-based
 * no more controllers, scopes
 * hierarchical Dependency Injection
@@ -34,7 +34,7 @@ Strongly Component-based
 
 
 
-## From Angular 1.5 to Angular 2 - syntax
+## From Angular 1.5 to Angular - syntax
 In an html template
 
 Model-to-view binding
@@ -77,12 +77,12 @@ https://angular.io/docs/ts/latest/guide/template-syntax.html
 
 
 
-## Angular2 Hello World Component
+## Angular Hello World Component
 See ``labs/20-angular2/base-helloworld``
 
 
 
-## Aside - how to bootstrap an Angular2 Application
+## Aside - how to bootstrap an Angular Application
 From ng-app to AppModule
 ```typescript
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -112,7 +112,7 @@ Modify the Hello World example so that
 
 
 
-## Common Utility directives
+## Common Utility directives: ngClass
 From 
 ```html
 <div ng-class="{active: isActive}">
@@ -132,7 +132,60 @@ To
 
 
 
-## From Angular 1.5 to Angular 2 - constructs
+## Common Utility directives: HostListener
+
+```typescript
+
+class CardHoverDirective {
+  constructor(private el: ElementRef,
+              private renderer: Renderer) 
+    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
+  }
+
+  @HostListener('mouseover') onMouseOver() {
+    let part = this.el.nativeElement.querySelector('.card-text')
+    this.renderer.setElementStyle(part, 'display', 'block');
+  }
+}
+```
+
+
+
+## Common Utility directives: HostBinding
+
+```typescript
+
+class CardHoverDirective {
+  @HostBinding('class.card-outline-primary')private ishovering: boolean;
+
+  constructor(private el: ElementRef,
+              private renderer: Renderer) {
+    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
+  }
+
+  @HostListener('mouseover') onMouseOver() {
+    let part = this.el.nativeElement.querySelector('.card-text');
+    this.renderer.setElementStyle(part, 'display', 'block');
+    this.ishovering = true;
+  }
+
+  @HostListener('mouseout') onMouseOut() {
+    let part = this.el.nativeElement.querySelector('.card-text');
+    this.renderer.setElementStyle(part, 'display', 'none');
+    this.ishovering = false;
+  }
+}
+```
+
+
+
+## HostBinding and HostListener example
+
+http://plnkr.co/edit/EgsmbXMN7s7YYDYIu9N8?p=preview
+
+
+
+## From Angular 1.5 to Angular - constructs
 * {{expression}} 
 * filters -> pipes
 
@@ -187,7 +240,7 @@ https://angular.io/resources/live-examples/cb-a1-a2-quick-reference/ts/plnkr.htm
 
 
 
-## From Angular 1.5 to Angular 2 - Components
+## From Angular 1.5 to Angular - Components
 The key concepts and approach stay the same
 * minor syntax changes
 * component configuration in Metadata
@@ -198,7 +251,7 @@ https://angular.io/docs/ts/latest/guide/cheatsheet.html
 
 
 
-## Today
+## Now
 we focus on Component APIs
 
 Additional concepts (module bundling, etc ) are needed before going into production
@@ -208,7 +261,7 @@ Additional help from the official Cheat Sheet during the labs
 
 
 
-## Next days
+## Next Steps
 * Dependency Injection (DI) 
 * Services
 * Http

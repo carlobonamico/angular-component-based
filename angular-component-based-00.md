@@ -11,7 +11,7 @@ or plain "Download Zip" from browser
 
 
 
-### Developing a Component-based application with Angular 2.0
+### Developing a Component-based application with Angular
 ### develop quality applications, faster
 In your first Angular project, the framework helped you quickly create an HTML5 app. But you now face new challenges as the UI complexity increases and more code moves to the front-end. The workshop shares Patterns and Best Practices on how to structure and implement complex, real-world Angular apps
 
@@ -30,7 +30,7 @@ In your first Angular project, the framework helped you quickly create an HTML5 
 * How does our code become unmanageable? A practical example
 * Issues and challenges in developing complex / large HTML5 applications
 * How to identify application Components
-* How to develop a simple Component in Angular 2
+* How to develop a simple Component in Angular
 * Adding inputs to the Component through bindings
 * Returning outputs through events and callbacks
 * Lifecycle callbacks
