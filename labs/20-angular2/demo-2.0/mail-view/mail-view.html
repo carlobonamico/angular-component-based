@@ -46,8 +46,8 @@
             
             <message-composer 
                 [draft]="draft"
-                (onSave)="updateDraft($event.draft)"
-                (onSend)="send()"
+                (onSave)="updateDraft($event.message)"
+                (onSend)="send($event.message)"
                 (onCancel)="closeComposer()"
             >
                 

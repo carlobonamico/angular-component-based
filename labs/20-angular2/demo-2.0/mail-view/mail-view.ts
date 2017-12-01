@@ -109,6 +109,13 @@ export class MailViewComponent  {
         this.composerActive = true; 
     };
 
+    updateDraft = function (draft) {
+    
+        this.draft = draft;
+
+        this.composerActive = true; 
+    };
+
 }
 
 
