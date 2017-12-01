@@ -90,3 +90,19 @@ Compare adding the call to orderService.getOrder(id)
 * in the ngOnInit method of the component
 * in a resolver
 
+
+Angular Language Service
+Angular Support (per la navigazione html-componente e viceversa)
+Typescript Hero (per auto-import ts, con il caveat che funziona bene
+per le classi del progetto, mentre per le classi di libreria a volte
+sbaglia il path)
+
+
+Opzionali:
+Angular Files (per generazione di componenti da gui, stile angular-cli)
+Angular 4 and Typescript Snippets di Dan Wahlin
+Angular 4 snippets di John Papa
+VersionLens per maggiori dettagli in package.json
+
+
+

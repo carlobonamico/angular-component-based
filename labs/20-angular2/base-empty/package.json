@@ -14,24 +14,24 @@
     }
   ],
   "dependencies": {
-    "@angular/common": "~2.2.0",
+    "@angular/common": "~4.4.3",
     "@angular/compiler": "~2.2.0",
-    "@angular/core": "~2.2.0",
-    "@angular/forms": "~2.2.0",
-    "@angular/http": "~2.2.0",
-    "@angular/platform-browser": "~2.2.0",
-    "@angular/platform-browser-dynamic": "~2.2.0",
+    "@angular/core": "~4.4.3",
+    "@angular/forms": "~4.4.3",
+    "@angular/http": "~4.4.3",
+    "@angular/platform-browser": "~4.4.3",
+    "@angular/platform-browser-dynamic": "~4.4.3",
     "@angular/router": "~3.2.0",
-    "@angular/upgrade": "~2.2.0",
-    "angular-in-memory-web-api": "~0.1.15",
-    "core-js": "^2.4.1",
+    "@angular/upgrade": "~4.4.3",
+    "angular-in-memory-web-api": "~0.4.6",
+    "core-js": "^2.5.1",
     "reflect-metadata": "^0.1.8",
-    "rxjs": "5.0.0-beta.12",
-    "systemjs": "0.19.39",
-    "zone.js": "^0.6.25"
+    "rxjs": "5.4.3",
+    "systemjs": "0.20.19",
+    "zone.js": "^0.8.17"
   },
   "devDependencies": {
-    "@types/core-js": "^0.9.34",
-    "typescript": "^2.0.3"
+    "@types/core-js": "^0.9.43",
+    "typescript": "^2.5.2"
   }
 }
