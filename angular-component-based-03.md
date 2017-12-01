@@ -1,4 +1,4 @@
-# PART 3 - Advanced Angular (2) Recipes
+# PART 3 - Advanced Angular Recipes
 
 
 
@@ -533,58 +533,67 @@ this.router.navigate(['/message', message.id]);
 ```
 
 
+
 # LAB
-0) generare i tre componenti con ng generate order-list-view
+* Create a new application with angular-cli
 
-1) importare Routes, RouterModule
+* Generate 3 components:
+  * main-page
+  * detail-page with an id parameter
+  * about-page
 
-2) definire la configurazione delle Route
 
+
+
+# LAB
+* definire la configurazione delle Route
+```
 const appRoutes: Routes = [
   { 
-      path: 'messages', 
-      component: MessageListComponent 
+      path: 'details', 
+      component: DetailPageComponent 
   },
 ];
-
+```
 in @NgModule
+```
 imports: [
     RouterModule.forRoot(appRoutes)
     
   ],
+```
 
 
 
 # LAB
-3) importare nel modulo il RouterModule con la configurazione corretta
 
-4) aggiungere router-outlet nell' html
+* add <router-outlet> into the html
 
-5) la vista di default si dovrebbe già vedere
+* add a navigation menu to reach two detail-page and the about-page (start with the last one)
+```
+<a routerLink="/details" routerLinkActive="active">Messages</a>
+```
 
-6) scrivo il menu usando la direttiva routerLink 
-
-<a routerLink="/messages" routerLinkActive="active">Messages</a>
-
-7) leggo il parametro id e visualizzo il dettaglio del componente
-
-class MyComponent {
+* Print the id Parameter on detail-page
+```
+class DetailPageComponent {
   constructor(route: ActivatedRoute) {
 
     route.snapshot.params.id
+```
 
 
 
 # Query Parameters
 Use the [queryParams] directive along with [routerLink]
 ```
-<a [routerLink]="['messages']" [queryParams]="{ page: 99 }">Go to Page 99</a>
+<a [routerLink]="['details']" [queryParams]="{ id: 99 }">Go to Id 99</a>
 ```
 
 Navigate programmatically using the Router service:
 ```
   goToPage(pageNum) {
-    this.router.navigate(['/messages'], { queryParams: { page: pageNum } });
+    this.router.navigate(['/details'], { queryParams: { id: pageNum } });
   }
 ```
 
@@ -862,6 +871,16 @@ export class HighlightDirective {
 * The Angular compiler imports the completed translation files, replaces the original messages with translated text, and generates a new version of the application in the target language.
 
 ### You need to build and deploy a separate version of the application for each supported language
+
+
+
+# The alternative
+
+NGX TRANSLATE
+https://github.com/ngx-translate/core
+
+* Allows changing language at runtime
+* same approach of translation service in AngularJS
 
 
 

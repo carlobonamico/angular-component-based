@@ -1173,20 +1173,43 @@ https://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.
 
 
 
-# Injector tokens
-```
-import { InjectionToken } from '@angular/core';
+
+# Injection tokens
+```typescript
 
 export const TITLE = new InjectionToken<string>('title');
 
+...
 providers: [
-    { provide: Hero,          useValue:    someHero },
-    { provide: TITLE,         useValue:   'Hero of the Month' },
+  ...
+    LocalStorageService,
     { provide: HeroService,   useClass:    HeroService },
+    { provide: TITLE,         useValue:   'Hero of the Month' },
     { provide: LoggerService, useClass:    DateLoggerService },
     { provide: MinimalLogger, useExisting: LoggerService },
-    { provide: RUNNERS_UP,    useFactory:  runnersUpFactory(2), deps: [Hero, HeroService] }
+    { provide: ShiftService,  useFactory:  shiftServiceFactory, 
+      deps: [HttpClient, SettingsService] 
+    }
   ]
+...
+
+export function shiftServiceFactory (http: HttpClient, settingsService:SettingsService){
+  
+  if (environment.production) {
+    return new ShiftServiceImpl(http, settingsService);
+  } else {
+    return new MockShiftService();
+  }
+};
+```
+
+
+
+# Injection tokens
+On the component
+```typescript
+
+constructor(@Inject(TITLE) public title: string){}
 ```
 
 
@@ -1246,6 +1269,7 @@ export class HeroService {
                     .map(this.extractData)
                     .catch(this.handleError);
   }
+
   private extractData(res:any) {
     return res.data || { };
   }
@@ -1255,7 +1279,7 @@ export class HeroService {
 
 # Typescript String Template
 
-* Composing URLs is easier using string templates
+* Composing URLs and strings is easier using string templates
 
 ```typescript
 let var1 = 1;
@@ -1263,6 +1287,15 @@ let var2 = 'my_var_2';
 
 let url = `resource/${var1}/${var2}`;
 ```
+
+
+
+# Typescript String Template
+* What you should do:
+  * urls
+  * error and alert messages
+* What you should NOT do:
+  * html injection 
 
 
 
@@ -1289,7 +1322,7 @@ export class HeroService {
 
 
 # Handling Errors
-```
+```typescript
   private handleError (error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
@@ -1308,20 +1341,14 @@ export class HeroService {
 
 
 
-# LAB: Add HTTP clients calling mock REST data
-Include the HttpClientModule in the main module
-
-Import HttpClient service in FolderService
-
-Inject HttpClient service instance in the FolderService constructor
-
-Create the folders.json mock data file in the root project folder (or better in a dedicated data folder)
-
-Implement the http GET call
-
-Convert the result ``toPromise()``
-
-Handle the resulting promise
+# Calling the service
+```typescript
+      this.heroService.getHero(id)
+      .subscribe(
+        (hero)=>this.manageResult(hero),
+        (error)=>this.manageError(error)
+      )
+```
 
 
 
@@ -1339,5 +1366,21 @@ create(name: string): Observable<Hero> {
 
 
 
-# Encapsulating Backend Calls in a Service Layer
+
+# LAB: Add HTTP clients calling mock REST data
+Include the HttpClientModule in the main module
+
+Import HttpClient service in MailService
+
+Inject HttpClient service instance in the MailService constructor
+
+Create the messages.json mock data file in the root project folder (or better in a dedicated data folder)
+
+Implement the http GET call
+
+
+
+# TIP
+
+Encapsulate Backend Calls in a Service Layer
 

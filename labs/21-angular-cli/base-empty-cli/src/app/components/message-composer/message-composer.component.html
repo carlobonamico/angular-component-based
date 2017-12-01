@@ -1,0 +1,14 @@
+<div class="mail-composer">
+    <form class="inline-form">
+        <h3>Compose message</h3>
+        From: {{draft.from}}<br/>
+        <hr> To: <input class="form-control" name="to" type="email" TODO="draft.to"><br/>
+        <hr> Subject: <input class="form-control" name="from" TODO="draft.subject"><br/>
+        <hr> Body: <br/>
+        <textarea class="form-control" name="body" TODO="draft.body"></textarea><br/>
+        <hr>
+        <button class="btn btn-primary" TODO="send()">Send</button>
+        <button class="btn " TODO="save()">Save</button>
+        <button class="btn " TODO="cancel()">Cancel</button>
+    </form>
+</div>
