@@ -132,59 +132,6 @@ To
 
 
 
-## Common Utility directives: HostListener
-
-```typescript
-
-class CardHoverDirective {
-  constructor(private el: ElementRef,
-              private renderer: Renderer) 
-    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
-  }
-
-  @HostListener('mouseover') onMouseOver() {
-    let part = this.el.nativeElement.querySelector('.card-text')
-    this.renderer.setElementStyle(part, 'display', 'block');
-  }
-}
-```
-
-
-
-## Common Utility directives: HostBinding
-
-```typescript
-
-class CardHoverDirective {
-  @HostBinding('class.card-outline-primary')private ishovering: boolean;
-
-  constructor(private el: ElementRef,
-              private renderer: Renderer) {
-    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
-  }
-
-  @HostListener('mouseover') onMouseOver() {
-    let part = this.el.nativeElement.querySelector('.card-text');
-    this.renderer.setElementStyle(part, 'display', 'block');
-    this.ishovering = true;
-  }
-
-  @HostListener('mouseout') onMouseOut() {
-    let part = this.el.nativeElement.querySelector('.card-text');
-    this.renderer.setElementStyle(part, 'display', 'none');
-    this.ishovering = false;
-  }
-}
-```
-
-
-
-## HostBinding and HostListener example
-
-http://plnkr.co/edit/EgsmbXMN7s7YYDYIu9N8?p=preview
-
-
-
 ## From Angular 1.5 to Angular - constructs
 * {{expression}} 
 * filters -> pipes
