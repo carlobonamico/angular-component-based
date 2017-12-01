@@ -533,11 +533,140 @@ export class ConfirmComponent {
 ```
 
 
+# ng-content
+
+Like ng-transclude on AngularJS.
+Allows to inject DOM objects inside a component
+
+```html
+<ng-content></ng-content>
+```
+
+
+
+# Example
+
+```typescript
+import { Component, Input, Output } from '@angular/core';
+@Component({
+  selector: 'card',
+  templateUrl: 'card.component.html',
+})
+export class CardComponent {
+    @Input() header: string = 'this is header';   
+    @Input() footer: string = 'this is footer';
+}
+```
+
+
+
+# Example
+
+```html
+<div class="card">
+    <div class="card-header">
+        {{ header }}
+    </div>
+
+    <!-- single slot transclusion here -->
+    <ng-content></ng-content>
+
+    <div class="card-footer">
+        {{ footer }}
+    </div>
+</div>
+```
+
+
+
+# Example
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+    <!-- put your dynamic content here -->
+    <div class="card-block">
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+      <!-- end dynamic content -->
+<card>
+```
+
+
+
+# ng-content: select attribute
+
+```html
+...
+<ng-content select="[card-body]"></ng-content>
+...
+```
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+
+    <div class="card-block" card-body><!--  We add the card-body attribute here -->
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+
+<card>
+```
+
+
+
+# ng-content: select attribute
+
+```html
+...
+<ng-content select=".card-body"></ng-content>
+...
+```
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+
+    <div class="card-block card-body">
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+
+<card>
+```
+
+
+
+# Multi-slot transclusion
+```html
+<div class="card">
+    <div class="card-header">
+    <!-- header slot here -->
+        <ng-content select="card-header"></ng-content>
+    </div>
+    <!-- body slot here -->
+    <ng-content select="card-body"></ng-content>
+    <div class="card-footer">
+    <!-- footer -->
+        <ng-content select="card-footer"></ng-content>
+    </div>
+</div>
+```
+
+
 
 ## Compodoc
 
 ```
 compodoc -p ./tsconfig.json -d docs demo-2.0/
+```
+```
+compodoc -p ./tsconfig.json -d docs
 ```
 
 
