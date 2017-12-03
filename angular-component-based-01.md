@@ -1513,3 +1513,93 @@ Implement the http GET call
 
 Encapsulate Backend Calls in a Service Layer
 
+
+
+
+# Create a custom form element
+
+```typescript
+import {Component, Input} from '@angular/core';
+
+
+import {  
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+
+
+@Component({
+  selector: 'form-text',
+  template: `
+    <div>
+      <input type="text" [(ngModel)]="value" />
+    </div>
+  `,
+  providers: [
+    {provide: NG_VALUE_ACCESSOR, useExisting: FormTextComponent, multi: true}
+  ],
+})
+export class FormTextComponent {}  
+```
+
+
+
+# Implement ControlValueAccessor interface
+
+```typescript
+interface ControlValueAccessor {  
+  writeValue(obj: any): void
+  registerOnChange(fn: any): void
+  registerOnTouched(fn: any): void
+  setDisabledState(isDisabled: boolean): void
+}
+```
+
+
+
+# Implement ControlValueAccessor interface
+
+```typescript
+import {ControlValueAccessor} from '@angular/forms';
+
+
+export class FormTextComponent implements ControlValueAccessor {  
+  private innerValue: string;
+
+
+  private changed = new Array<(value: string) => void>();
+  private touched = new Array<() => void>();
+
+
+  get value(): string {
+    return this.innerValue;
+  }
+
+
+  set value(value: string) {
+    if (this.innerValue !== value) {
+      this.innerValue = value;
+      this.changed.forEach(f => f(value));
+    }
+  }
+
+
+  touch() {
+    this.touched.forEach(f => f());
+  }
+
+
+  writeValue(value: string) {
+    this.innerValue = value;
+  }
+
+
+  registerOnChange(fn: (value: string) => void) {
+    this.changed.push(fn);
+  }
+
+
+  registerOnTouched(fn: () => void) {
+    this.touched.push(fn);
+  }
+}
+```
