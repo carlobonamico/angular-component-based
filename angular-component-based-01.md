@@ -1,4 +1,4 @@
-# PART 1 - Introduction to Angular 2
+# PART 1 - Introduction to Angular
 
 
 
@@ -111,8 +111,8 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 ## TOPICS
-* Angular 2 Component model and API
-* How to develop a simple Component in Angular 2
+* Angular Component model and API
+* How to develop a simple Component in Angular
 
 
 
@@ -125,7 +125,7 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 
-## Enter Angular 2
+## Enter Angular
 * The only way is to do Components
 * even the application is a component
 
@@ -137,7 +137,7 @@ TIP: use a screen capture and annotation tool such as https://qsnapnet.com/
 
 
 
-## Angular 2 Components API
+## Angular Components API
 * declaring components ``@Component`` 
 * defining the component interface with ``inputs, outputs`` inside ``@Component`` annotation
 * manage the component lifecycle with ``ngOnInit``, ``ngOnChanges`` and ``ngOnDestroy``
@@ -363,7 +363,6 @@ Define the ``<message-viewer>`` component
 In the base application inside the labs folder you will find the ``message-viewer`` folder
 containing an empty scheleton of component
 
-Preliminary steps: 
 * complete the ``message-viewer`` component to handle 
   * message input
 
@@ -374,6 +373,7 @@ Preliminary steps:
 * and log the function call
 
 * import the component in the app.ts file.
+
 
 
 
@@ -515,7 +515,6 @@ In the parent html (mail-view.html)
 ## Propagating output from Components
 ```
 @Component({
-  moduleId: module.id,
   selector: 'app-confirm',
   templateUrl: 'confirm.component.html'
 })
@@ -534,11 +533,140 @@ export class ConfirmComponent {
 ```
 
 
+# ng-content
+
+Like ng-transclude on AngularJS.
+Allows to inject DOM objects inside a component
+
+```html
+<ng-content></ng-content>
+```
+
+
+
+# Example
+
+```typescript
+import { Component, Input, Output } from '@angular/core';
+@Component({
+  selector: 'card',
+  templateUrl: 'card.component.html',
+})
+export class CardComponent {
+    @Input() header: string = 'this is header';   
+    @Input() footer: string = 'this is footer';
+}
+```
+
+
+
+# Example
+
+```html
+<div class="card">
+    <div class="card-header">
+        {{ header }}
+    </div>
+
+    <!-- single slot transclusion here -->
+    <ng-content></ng-content>
+
+    <div class="card-footer">
+        {{ footer }}
+    </div>
+</div>
+```
+
+
+
+# Example
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+    <!-- put your dynamic content here -->
+    <div class="card-block">
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+      <!-- end dynamic content -->
+<card>
+```
+
+
+
+# ng-content: select attribute
+
+```html
+...
+<ng-content select="[card-body]"></ng-content>
+...
+```
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+
+    <div class="card-block" card-body><!--  We add the card-body attribute here -->
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+
+<card>
+```
+
+
+
+# ng-content: select attribute
+
+```html
+...
+<ng-content select=".card-body"></ng-content>
+...
+```
+
+```html
+<h1>Single slot transclusion</h1>
+<card header="my header" footer="my footer">
+
+    <div class="card-block card-body">
+        <h4 class="card-title">You can put any content here</h4>
+        <p class="card-text">For example this line of text and</p>
+        <a href="#" class="btn btn-primary">This button</a>
+      </div>
+
+<card>
+```
+
+
+
+# Multi-slot transclusion
+```html
+<div class="card">
+    <div class="card-header">
+    <!-- header slot here -->
+        <ng-content select="card-header"></ng-content>
+    </div>
+    <!-- body slot here -->
+    <ng-content select="card-body"></ng-content>
+    <div class="card-footer">
+    <!-- footer -->
+        <ng-content select="card-footer"></ng-content>
+    </div>
+</div>
+```
+
+
 
 ## Compodoc
 
 ```
 compodoc -p ./tsconfig.json -d docs demo-2.0/
+```
+```
+compodoc -p ./tsconfig.json -d docs
 ```
 
 
@@ -671,7 +799,7 @@ Add the message reply logic to mail-view.ts
 
 
 
-#Advanced Forms Features
+# Advanced Forms Features
 * Give the form a name
   * `<form #userForm="ngForm">` 
   * meaning this form has an id of `userForm` which will reference the "ngForm" directive instance in the controller
@@ -763,6 +891,61 @@ Declare output events
 * send, cancel, and optionally save
 
 Include it in the parent html template
+
+
+
+
+## Common Utility directives: HostListener
+
+```typescript
+
+class CardHoverDirective {
+  constructor(private el: ElementRef,
+              private renderer: Renderer) 
+    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
+  }
+
+  @HostListener('mouseover') onMouseOver() {
+    let part = this.el.nativeElement.querySelector('.card-text')
+    this.renderer.setElementStyle(part, 'display', 'block');
+  }
+}
+```
+
+
+
+## Common Utility directives: HostBinding
+
+```typescript
+
+class CardHoverDirective {
+  @HostBinding('class.card-outline-primary')private ishovering: boolean;
+
+  constructor(private el: ElementRef,
+              private renderer: Renderer) {
+    // renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'gray');
+  }
+
+  @HostListener('mouseover') onMouseOver() {
+    let part = this.el.nativeElement.querySelector('.card-text');
+    this.renderer.setElementStyle(part, 'display', 'block');
+    this.ishovering = true;
+  }
+
+  @HostListener('mouseout') onMouseOut() {
+    let part = this.el.nativeElement.querySelector('.card-text');
+    this.renderer.setElementStyle(part, 'display', 'none');
+    this.ishovering = false;
+  }
+}
+```
+
+
+
+## HostBinding and HostListener example
+
+http://plnkr.co/edit/EgsmbXMN7s7YYDYIu9N8?p=preview
+
 
 
 
@@ -869,6 +1052,57 @@ Integrate the mail-composer component with the reply button in message viewer
 
 
 
+# Improve productivity
+
+http://blog.mgechev.com/2017/04/23/angular-tooling-codelyzer-angular-cli-ngrev/
+
+
+
+# Angular CLI
+https://github.com/angular/angular-cli
+
+Let's try it
+
+
+
+# How to configure an application
+
+* before AOT: using environment files
+* after AOT:
+- Using a custom js file in the index.html with some global variables to configure the application
+- Using a server side configuration retrived during the application startup.
+
+
+
+# packaging
+
+* Angular-cli allows to create a build package for an entire application
+```
+ng build --prod
+```
+
+But... no methods to build a library... at the moment!
+
+https://github.com/angular/angular-cli/issues/6510
+
+
+
+# packaging a library
+
+* The google way:
+https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview#
+
+* A simple application you can use to maka a library
+https://github.com/filipesilva/angular-quickstart-lib
+
+* a packager tool
+https://github.com/dherges/ng-packagr
+
+* a Yeoman generator
+https://github.com/jvandemo/generator-angular2-library
+
+
+
 # Dependency Injection Recipe
 * make sure annotation support is enabled
 ```json
@@ -880,13 +1114,19 @@ in `tsconfig.json` and/or `system.conf.js`
 
 
 
-# Services
+# Dependency injection
+* One of Angular's biggest features and selling points
+* It allows us to inject dependencies in different components across our applications
+
+
+
+# Providers on NgModule
 
 #### Lazily instantiated
   Angular only instantiates a service when an application component depends on it.
-#### Singletons 
-  Each component dependent on a service gets a reference to the single instance generated by the service factory.
 #### Injected in components automatically
+  Each component dependent on a service gets a reference to the single instance generated by the service factory.
+
 
 
 
@@ -914,6 +1154,74 @@ class MessageService {
   constructor(private messageService: MessageService)
 ```
 
+
+
+# Example
+
+```typescript
+@NgModule({
+  imports:      [ BrowserModule, FormsModule, HttpModule ],
+  declarations: [ MailViewComponent, MailLogoComponent, MessageListComponent,CommonStarComponent,MessageViewerComponent,FolderListComponent,MessageComposerComponent, SearchFormComponent
+
+    ],
+
+  providers:[LogService, MessageService, FolderService],
+
+  bootstrap:    [ MailViewComponent ]
+})
+export class AppModule { }
+```
+
+LogService, MessageService, FolderService are singletons and injectable on every component inside the app
+
+
+
+# Providers on Components
+
+
+#### Lazily instantiated
+  Angular only instantiates a service when an application component depends on it.
+
+#### Injected in components automatically
+  Each component has it's own instance of the provider
+
+#### Providers or ViewProviders
+* ViewProvicers are local for the declaring component 
+* Providers are visible also for the declaring component's children
+
+
+
+# Example 1
+
+```typescript
+@Component({
+  selector: 'greet',
+  viewProviders: [
+    Greeter
+  ],
+  template: `<needs-greeter></needs-greeter>`    
+})
+class GreetComponent {
+}
+```
+Each instance of <greet> has its own Greeter instance. If also <needs-greeter> needs Greeter, it will have its own instance too
+
+
+
+# Example 2
+
+```typescript
+@Component({
+  selector: 'greet',
+  providers: [
+    Greeter
+  ],
+  template: `<needs-greeter></needs-greeter>`    
+})
+class GreetComponent {
+}
+```
+Each instance of <greet> has its own Greeter instance. If also <needs-greeter> needs Greeter, it will share the same instance of the parent component.
 
 
 
@@ -951,6 +1259,33 @@ Call its methods
 
 
 
+# Advanced DI
+* You can inject Parent components inside child components
+* You can inject services into other service
+
+
+
+# Inject Parent components inside child components
+
+```typescript
+@Component({
+  selector: 'my-comp'
+  ...  
+})
+class MyComponent {
+  constructor(@Optional() private container:MyContainer) {
+    
+  }
+
+  handleClick = function(){
+    if(this.container){
+      this.container.foo();      
+    }
+  }
+}
+```
+
+
 
 # @Injectable
 * Injecting Services into Services
@@ -967,20 +1302,43 @@ https://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.
 
 
 
-# Injector tokens
-```
-import { InjectionToken } from '@angular/core';
+
+# Injection tokens
+```typescript
 
 export const TITLE = new InjectionToken<string>('title');
 
+...
 providers: [
-    { provide: Hero,          useValue:    someHero },
-    { provide: TITLE,         useValue:   'Hero of the Month' },
+  ...
+    LocalStorageService,
     { provide: HeroService,   useClass:    HeroService },
+    { provide: TITLE,         useValue:   'Hero of the Month' },
     { provide: LoggerService, useClass:    DateLoggerService },
     { provide: MinimalLogger, useExisting: LoggerService },
-    { provide: RUNNERS_UP,    useFactory:  runnersUpFactory(2), deps: [Hero, HeroService] }
+    { provide: ShiftService,  useFactory:  shiftServiceFactory, 
+      deps: [HttpClient, SettingsService] 
+    }
   ]
+...
+
+export function shiftServiceFactory (http: HttpClient, settingsService:SettingsService){
+  
+  if (environment.production) {
+    return new ShiftServiceImpl(http, settingsService);
+  } else {
+    return new MockShiftService();
+  }
+};
+```
+
+
+
+# Injection tokens
+On the component
+```typescript
+
+constructor(@Inject(TITLE) public title: string){}
 ```
 
 
@@ -1016,37 +1374,84 @@ And resolving it later
 * https://angular.io/docs/ts/latest/guide/server-communication.html
 
 ### SETUP
-* import ```import { HttpModule } from '@angular/http';```
-* add HttpModule to main NgModule
+* import 
+```typescript
+import { HttpClientModule } from '@angular/common/http';
+```
+* add HttpClientModule to main NgModule
  
 
 
 
 # GET
-```
-import { Http, Response }          from '@angular/http';
+```typescript
+import { HttpClient }          from '@angular/common/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HeroService {
   private heroesUrl = 'api/heroes';  // URL to web API
-  constructor (private http: Http) {}
+  constructor (private http: HttpClient) {}
   getHeroes(): Observable<Hero[]> {
-    return this.http.get(this.heroesUrl)
+    return this.http<Hero[]>.get(this.heroesUrl)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
-  private extractData(res: Response) {
-    let body = res.json();
-    return body.data || { };
+
+  private extractData(res:any) {
+    return res.data || { };
+  }
+```
+
+
+
+# Typescript String Template
+
+* Composing URLs and strings is easier using string templates
+
+```typescript
+let var1 = 1;
+let var2 = 'my_var_2';
+
+let url = `resource/${var1}/${var2}`;
+```
+
+
+
+# Typescript String Template
+* What you should do:
+  * urls
+  * error and alert messages
+* What you should NOT do:
+  * html injection 
+
+
+
+# Real Life Example
+```typescript
+import { HttpClient }          from '@angular/common/http';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
+@Injectable()
+export class HeroService {
+  constructor (private http: HttpClient) {}
+  getHero(id:string): Observable<Hero> {
+    let url = `resource/${id}`;
+    return this.http<Hero>.get(url)
+                    .map(this.extractData)
+                    .catch(this.handleError);
+  }
+  private extractData(res:any) {
+    return res.data || { };
   }
 ```
 
 
 
 # Handling Errors
-```
+```typescript
   private handleError (error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
@@ -1065,20 +1470,14 @@ export class HeroService {
 
 
 
-# LAB: Add HTTP clients calling mock REST data
-Include the HttpModule in the main module
-
-Import Http service in FolderService
-
-Inject Http service instance in the FolderService constructor
-
-Create the folders.json mock data file in the root project folder (or better in a dedicated data folder)
-
-Implement the http GET call
-
-Convert the result ``toPromise()``
-
-Handle the resulting promise
+# Calling the service
+```typescript
+      this.heroService.getHero(id)
+      .subscribe(
+        (hero)=>this.manageResult(hero),
+        (error)=>this.manageError(error)
+      )
+```
 
 
 
@@ -1088,7 +1487,7 @@ create(name: string): Observable<Hero> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.heroesUrl, { name }, options)
+    return this.http<any>.post(this.heroesUrl, { name }, options)
                     .map(this.extractData)
                     .catch(this.handleError);
   }
@@ -1096,5 +1495,111 @@ create(name: string): Observable<Hero> {
 
 
 
-# Encapsulating Backend Calls in a Service Layer
 
+# LAB: Add HTTP clients calling mock REST data
+Include the HttpClientModule in the main module
+
+Import HttpClient service in MailService
+
+Inject HttpClient service instance in the MailService constructor
+
+Create the messages.json mock data file in the root project folder (or better in a dedicated data folder)
+
+Implement the http GET call
+
+
+
+# TIP
+
+Encapsulate Backend Calls in a Service Layer
+
+
+
+
+# Create a custom form element
+
+```typescript
+import {Component, Input} from '@angular/core';
+
+
+import {  
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+
+
+@Component({
+  selector: 'form-text',
+  template: `
+    <div>
+      <input type="text" [(ngModel)]="value" />
+    </div>
+  `,
+  providers: [
+    {provide: NG_VALUE_ACCESSOR, useExisting: FormTextComponent, multi: true}
+  ],
+})
+export class FormTextComponent {}  
+```
+
+
+
+# Implement ControlValueAccessor interface
+
+```typescript
+interface ControlValueAccessor {  
+  writeValue(obj: any): void
+  registerOnChange(fn: any): void
+  registerOnTouched(fn: any): void
+  setDisabledState(isDisabled: boolean): void
+}
+```
+
+
+
+# Implement ControlValueAccessor interface
+
+```typescript
+import {ControlValueAccessor} from '@angular/forms';
+
+
+export class FormTextComponent implements ControlValueAccessor {  
+  private innerValue: string;
+
+
+  private changed = new Array<(value: string) => void>();
+  private touched = new Array<() => void>();
+
+
+  get value(): string {
+    return this.innerValue;
+  }
+
+
+  set value(value: string) {
+    if (this.innerValue !== value) {
+      this.innerValue = value;
+      this.changed.forEach(f => f(value));
+    }
+  }
+
+
+  touch() {
+    this.touched.forEach(f => f());
+  }
+
+
+  writeValue(value: string) {
+    this.innerValue = value;
+  }
+
+
+  registerOnChange(fn: (value: string) => void) {
+    this.changed.push(fn);
+  }
+
+
+  registerOnTouched(fn: () => void) {
+    this.touched.push(fn);
+  }
+}
+```

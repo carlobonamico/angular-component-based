@@ -1,0 +1,156 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    font-family: sans-serif;
+    margin: 0px; 
+}
+
+section {
+    padding: 15px
+}
+
+.page-container {
+
+    display: flex; 
+    flex-flow: column nowrap;
+    /* border: 1px solid red; */
+    height: 100%;
+
+}
+
+.page-center{
+    flex: 3 auto;
+    /* border: 1px solid red; */
+
+}
+
+
+.vertical-container {
+
+    display: flex; 
+    flex-flow: column wrap;
+    /* border: 1px solid red; */
+
+
+}
+
+
+.horizontal-container {
+
+    display: flex; 
+    flex-flow: row wrap;
+    
+    /* border: 1px solid blue; */
+
+    
+}
+.horizontal-center{
+    flex: 3;
+    /* border: 1px solid blue; */
+}
+
+
+header {
+    background-color: lightblue;
+    padding: 5px;
+    min-height: 40px; 
+}
+
+footer {
+    background-color: lightblue;
+    min-height: 30px; 
+}
+
+.logo{
+    min-width: 200px;
+    padding-right: 20px;  
+}
+
+.folder-list {
+
+    padding: 5px;
+}
+
+.page-left-menu
+{
+    background-color: lightgrey;
+    padding-right: 10px;
+}
+.message-list {
+    background-color: white;
+    padding: 5px;
+    
+}
+
+.message {
+    padding: 2px;
+}
+
+.message-body{
+    margin: 10px
+}
+
+.message-body{
+    border: solid gray 1px;
+}
+
+.message-list-odd{
+    background-color: lightgrey;
+}
+
+.message-list-even{
+    background-color: white;
+}
+
+.message-current {
+    font-weight: bold;
+}
+.message-selected {
+    background-color: yellow;
+}
+
+.star{
+    color: grey;
+}
+.star-starred
+{
+    color: orange;
+    font-weight: bold;  
+
+}
+
+.right-align {
+    margin-left: auto;
+}
+
+.folder {
+    padding: 5px;
+    border-left: 3px;
+}
+.folder-selected {
+    font-weight: bold;
+    border-left: 3px solid red;
+    
+}
+
+.align-right { float:right }
+
+hr { margin-top: 5px;margin-bottom: 10px; }
+.nav-pills>li>a {padding: 5px 10px;}
+
+
+.sender {
+    font-weight: bold;
+}
+
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+form.ng-invalid  {
+  border: 1px solid #a94442; /* red */
+}
