@@ -23,12 +23,16 @@
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14",
  
-
     "@angular/cli": "1.4.3",
     "@angular/compiler-cli": "^4.2.4",
     "@angular/language-service": "^4.2.4",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
+
+    "connect-livereload": "0.6.0",
+    "tiny-lr": "1.0.5",
+    "express": "~4.10.2",
+   
     "@types/node": "~6.0.60",
     "codelyzer": "~3.1.1",
     "jasmine-core": "~2.6.2",
@@ -42,11 +46,8 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "~2.3.3",
+    "typescript": "~2.3.3"
 
-    "connect-livereload": "~0.5.0",
-    "tiny-lr": "~0.1.4",
-    "express": "~4.10.2"
 
 
   }
