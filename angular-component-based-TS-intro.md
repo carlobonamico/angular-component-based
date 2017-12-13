@@ -34,8 +34,7 @@
 ```typescript
 class Persona { 
     constructor(private nome: string, private cognome: string) { 
-        this.nome = nome; 
-        this.cognome = cognome; 
+        
     }
 
     visualizzaNomeCognome() {
@@ -73,7 +72,7 @@ let output = identity<string>("myString");
 ## Functions
 
 ```typescript
-function buildName(firstName = ”Jim", lastName?: string) { 
+function buildName(firstName = "Jim", lastName?: string) { 
 	if (lastName) 
 		return firstName + " " + lastName; 
 	else return firstName; 

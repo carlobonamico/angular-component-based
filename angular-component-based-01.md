@@ -363,6 +363,8 @@ Define the ``<message-viewer>`` component
 In the base application inside the labs folder you will find the ``message-viewer`` folder
 containing an empty scheleton of component
 
+*Steps* 
+
 * complete the ``message-viewer`` component to handle 
   * message input
 
@@ -371,13 +373,16 @@ containing an empty scheleton of component
   * forward
   * delete
 * and log the function call
+ 
+...
+
+
+
+ 
+...
 
 * import the component in the app.ts file.
 
-
-
-
-Steps: 
 * edit the mail message html into ``message-viewer.html``
 * complete the component definition in ``message-viewer.ts``, passing in the ``message`` parameter
 * use ``messages[0]`` from the ``mail-view`` component
@@ -493,8 +498,8 @@ This injects an ``onCurrentMessageChanged`` event callback in the component inst
 
 
 
-## Let's change the message-list behaviour 
-adding``onCurrentMessageChanged`` outputs
+## Let's change together the message-list behaviour 
+adding ``onCurrentMessageChanged`` outputs
 
 
 
@@ -512,7 +517,7 @@ In the parent html (mail-view.html)
 
 
 
-## Propagating output from Components
+## Another way to declare inputs and outputs 
 ```
 @Component({
   selector: 'app-confirm',
@@ -533,7 +538,8 @@ export class ConfirmComponent {
 ```
 
 
-# ng-content
+
+# How to transclude contents
 
 Like ng-transclude on AngularJS.
 Allows to inject DOM objects inside a component
@@ -660,6 +666,36 @@ export class CardComponent {
 
 
 
+# Optional Lab
+
+Refactor the ``message-viewer`` component removing the ``<h3>`` tag containing the title. 
+
+Create a new component named ``message-card`` with:
+* An header section that will handle the message title.
+* A ng-content section which will contain the message-viewer 
+ 
+...
+
+
+
+# How the mail-view should look like
+
+```html
+<message-card [header]="currentMessage.title"  *ngIf="currentMessage">
+    <message-viewer
+    [message]="currentMessage"
+    (onDelete)="delete($event.message)"
+    (onReply)="replyTo($event.message)"
+    (onForward)="forward($event.message)"
+        >
+    </message-viewer>
+</message-card>
+
+```
+
+
+
+
 ## Compodoc
 
 ```
@@ -694,6 +730,8 @@ Declaring a Component
 
 
 Remember: TEST the page at each step - __F12 is your friend__
+
+...
 
 
 
@@ -766,6 +804,8 @@ We achieve complex behaviours by collaboration of many simpler components
 * "Smart", "dumb" and "stateless" components
 
 
+
+# Let's change together the mail-view behaviour
 
 Bind the inputs and outputs
 
@@ -861,24 +901,6 @@ Add the message reply logic to mail-view.ts
 
 
 
-# Forms
-
-ngModel
-
-required
-
-``<form #formName = "ngForm">``
-
-Then form validation status is formName.form.valid
-
-Disable the send button if the form is not valid
-
-Validate minimum 3 characters length in the Subject field
-
-Display a validation error message
-
-
-
 ## Lab 05
 Integrate the mail-composer component
 
@@ -892,6 +914,73 @@ Declare output events
 
 Include it in the parent html template
 
+
+
+# Additional Lab
+
+* play with validation: make subject required and with minimum 3 characters length.
+
+* Disable the send button if the form is not valid
+
+* Display a validation error message
+
+
+
+
+# how to access dom from ts
+
+* sometimes we need to access the DOM
+* for instance to wrap a third party JS library in an angular component
+* or to make some directives
+
+
+
+
+# ElementRef
+
+THe following example prints the html of the component itself
+
+```
+import { AfterContentInit, Component, ElementRef } from '@angular/core';
+
+@Component({
+    selector: 'app-root',
+    template: `
+    <h1>My App</h1>
+    <pre>
+      <code>{{ node }}</code>
+    </pre>
+  `
+})
+export class AppComponent implements AfterContentInit {
+  node: string;
+
+  constructor(private elementRef: ElementRef) { }
+
+  ngAfterContentInit() {
+    const tmp = document.createElement('div');
+    const el = this.elementRef.nativeElement.cloneNode(true);
+
+    tmp.appendChild(el);
+    this.node = tmp.innerHTML;
+  }
+
+}
+```
+
+
+
+# An example of Directive
+```
+import { Directive, ElementRef, Input } from '@angular/core';
+
+@Directive({ selector: '[myHighlight]' })
+export class HighlightDirective {
+    constructor(el: ElementRef) {
+       el.nativeElement.style.backgroundColor = 'yellow';
+    }
+}
+```
 
 
 
@@ -1104,6 +1193,9 @@ https://github.com/jvandemo/generator-angular2-library
 
 
 # Dependency Injection Recipe
+
+* Only if you are using SystemJS and not an Angular-cli based application
+
 * make sure annotation support is enabled
 ```json
 typescriptOptions: {
@@ -1204,7 +1296,7 @@ LogService, MessageService, FolderService are singletons and injectable on every
 class GreetComponent {
 }
 ```
-Each instance of <greet> has its own Greeter instance. If also <needs-greeter> needs Greeter, it will have its own instance too
+Each instance of ```<greet>``` has its own Greeter instance. If also ```<needs-greeter>``` needs Greeter, it will have its own instance too
 
 
 
@@ -1221,41 +1313,37 @@ Each instance of <greet> has its own Greeter instance. If also <needs-greeter> n
 class GreetComponent {
 }
 ```
-Each instance of <greet> has its own Greeter instance. If also <needs-greeter> needs Greeter, it will share the same instance of the parent component.
+Each instance of ```<greet>``` has its own Greeter instance. If also ```<needs-greeter>``` needs Greeter, it will share the same instance of the parent component.
 
 
 
-# Services
-Create a TemplateService class
+# Let's create a service together
 
-Create the getReplyTemplate() method
+* Create a TemplateService class
 
-import the service class in mailView.ts
+* Create the getReplyTemplate() method
 
-Replace the old code with the new method call
+* Replace the old code with the new method call
 
-Test ot 
-
-Configure the provider in the app module and re-test with Dependency Injection
+* import the service using DI
 
 
 
-# FolderService
-Create the FolderService class
+# Lab
 
-methods
-* getCustomFolders()
-* getFolders()
+* Create the FolderService class
 
-Create with a nerw an instance in mail-view.ts
+* methods
+  * getCustomFolders()
+  * getFolders()
 
-Replace the hard-coded folder lists with the new method calls
+* Replace the hard-coded folder lists with the new method calls
 
-Add the FolderService class as a Provider in the module
+* Add the FolderService class as a Provider in the module
 
-Inject it in the component constructor
+* Inject it in the component constructor
 
-Call its methods
+* Call its methods
 
 
 
@@ -1291,6 +1379,7 @@ class MyComponent {
 * Injecting Services into Services
 
 
+
 # LAB 
 Create the LogService and inject it into the other services
 
@@ -1304,6 +1393,9 @@ https://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.
 
 
 # Injection tokens
+
+When you register a provider with an injector, you associate that provider with a dependency injection token. The injector maintains an internal token-provider map that it references when asked for a dependency.
+
 ```typescript
 
 export const TITLE = new InjectionToken<string>('title');
@@ -1340,6 +1432,13 @@ On the component
 
 constructor(@Inject(TITLE) public title: string){}
 ```
+
+
+
+# Advanced References
+
+https://blog.thoughtram.io/angular2/2015/11/23/multi-providers-in-angular-2.html
+
 
 
 
@@ -1386,22 +1485,31 @@ import { HttpClientModule } from '@angular/common/http';
 # GET
 ```typescript
 import { HttpClient }          from '@angular/common/http';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HeroService {
   private heroesUrl = 'api/heroes';  // URL to web API
   constructor (private http: HttpClient) {}
-  getHeroes(): Observable<Hero[]> {
-    return this.http<Hero[]>.get(this.heroesUrl)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+  getHeroes() {
+    return this.http.get<Hero[]>(this.heroesUrl).toPromise();
   }
 
+```
+
+
+
+# On the component
+
+```typescript
+  this.heroService.getHeroes()
+            .then(this.extractData)
+            .catch(this.handleError);
+
   private extractData(res:any) {
-    return res.data || { };
+    //do what you want with the data retrieved
   }
+
+
 ```
 
 
@@ -1431,20 +1539,13 @@ let url = `resource/${var1}/${var2}`;
 # Real Life Example
 ```typescript
 import { HttpClient }          from '@angular/common/http';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HeroService {
   constructor (private http: HttpClient) {}
-  getHero(id:string): Observable<Hero> {
+  getHero(id:string) {
     let url = `resource/${id}`;
-    return this.http<Hero>.get(url)
-                    .map(this.extractData)
-                    .catch(this.handleError);
-  }
-  private extractData(res:any) {
-    return res.data || { };
+    return this.http.get<Hero>(url).toPromise();
   }
 ```
 
@@ -1463,7 +1564,6 @@ export class HeroService {
       errMsg = error.message ? error.message : error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 }
 ```
@@ -1473,23 +1573,23 @@ export class HeroService {
 # Calling the service
 ```typescript
       this.heroService.getHero(id)
-      .subscribe(
-        (hero)=>this.manageResult(hero),
-        (error)=>this.manageError(error)
-      )
+      .then(this.extractData)
+      .catch(this.handleError);
 ```
 
 
 
 # More on HTTP: POST
-```
+```typescript
 create(name: string): Observable<Hero> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
-    return this.http<any>.post(this.heroesUrl, { name }, options)
-                    .map(this.extractData)
-                    .catch(this.handleError);
+    let body = {
+      newName: name
+    };
+
+    return this.http.post<any>(this.heroesUrl, body, options).toPromise();
   }
 ```
 
@@ -1515,6 +1615,9 @@ Encapsulate Backend Calls in a Service Layer
 
 
 
+# Custom form elements
+
+
 
 # Create a custom form element
 
@@ -1535,7 +1638,7 @@ import {
     </div>
   `,
   providers: [
-    {provide: NG_VALUE_ACCESSOR, useExisting: FormTextComponent, multi: true}
+    {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormTextComponent), multi: true}
   ],
 })
 export class FormTextComponent {}  
@@ -1603,3 +1706,81 @@ export class FormTextComponent implements ControlValueAccessor {
   }
 }
 ```
+
+
+
+# Custom Validation 1
+
+```typescript
+@Directive({
+  selector: '[forbiddenName]',
+  providers: [{provide: NG_VALIDATORS, useExisting: forwardRef(() => ForbiddenValidatorDirective), multi: true}]
+})
+export class ForbiddenValidatorDirective implements Validator {
+  @Input() forbiddenName: string;
+ 
+  validate(control: AbstractControl): {[key: string]: any} {
+    return this.forbiddenName ? this.forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)
+                              : null;
+  }
+
+  forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} => {
+      let forbidden = nameRe.test(control.value);
+      return forbidden ? {'forbiddenName': {value: control.value}} : null;
+    };
+  }
+}
+```
+
+```html
+<input id="name" name="name" class="form-control"
+       required minlength="4" forbiddenName="bob"
+       [(ngModel)]="hero.name" #name="ngModel" >
+```
+
+
+
+# Custom Validation 2
+
+```typescript
+import { Directive, forwardRef } from '@angular/core';
+import { NG_VALIDATORS, FormControl } from '@angular/forms';
+
+function validateEmailFactory(emailBlackList: EmailBlackList) {
+  return (c: FormControl) => {
+    let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+    return EMAIL_REGEXP.test(c.value) ? null : {
+      validateEmail: {
+        valid: false
+      }
+    };
+  };
+}
+
+@Directive({
+  selector: '[validateEmail][ngModel]',
+  providers: [
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => EmailValidator), multi: true }
+  ]
+})
+export class EmailValidator {
+
+  validator: Function;
+
+  constructor(emailBlackList: EmailBlackList) {
+    this.validator = validateEmailFactory(emailBlackList);
+  }
+
+  validate(c: FormControl) {
+    return this.validator(c);
+  }
+}
+```
+
+
+
+# References
+
+https://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html
