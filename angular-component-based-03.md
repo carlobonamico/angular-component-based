@@ -155,7 +155,7 @@ var subscription = source.subscribe(
 
 # Publish/Subscribe with Subjects
 
-A subject is an observer... observable
+A subject is an observer that can be controlled
 
 * http://reactivex.io/documentation/subject.html
 
@@ -166,7 +166,7 @@ A subject is an observer... observable
 ```
 subject.subscribe({
 	next:function(value){
-  	console.log('1° subscriber ' + value);
+  	console.log('1 subscriber ' + value);
   },
   error:function(error){
   	console.error(error);
@@ -178,7 +178,7 @@ subject.subscribe({
 
 subject.subscribe({
 	next:function(value){
-  	console.log('2° subscriber ' + value);
+  	console.log('2 subscriber ' + value);
   }
 });
 
@@ -534,71 +534,6 @@ this.router.navigate(['/message', message.id]);
 
 
 
-# LAB
-* Create a new application with angular-cli
-
-* Generate 3 components:
-  * main-page
-  * detail-page with an id parameter
-  * about-page
-
-
-
-
-# LAB
-* definire la configurazione delle Route
-```
-const appRoutes: Routes = [
-  { 
-      path: 'details', 
-      component: DetailPageComponent 
-  },
-];
-```
-in @NgModule
-```
-imports: [
-    RouterModule.forRoot(appRoutes)
-    
-  ],
-```
-
-
-
-# LAB
-
-* add <router-outlet> into the html
-
-* add a navigation menu to reach two detail-page and the about-page (start with the last one)
-```
-<a routerLink="/details" routerLinkActive="active">Messages</a>
-```
-
-* Print the id Parameter on detail-page
-```
-class DetailPageComponent {
-  constructor(route: ActivatedRoute) {
-
-    route.snapshot.params.id
-```
-
-
-
-# Query Parameters
-Use the [queryParams] directive along with [routerLink]
-```
-<a [routerLink]="['details']" [queryParams]="{ id: 99 }">Go to Id 99</a>
-```
-
-Navigate programmatically using the Router service:
-```
-  goToPage(pageNum) {
-    this.router.navigate(['/details'], { queryParams: { id: pageNum } });
-  }
-```
-
-
-
 # Reading parameters in components
 With Snapshot
 
@@ -625,6 +560,80 @@ ngOnInit() {
     this.sub.unsubscribe();
   }
   ```
+
+
+
+# LAB
+* Create a new application with angular-cli
+
+* Generate 3 components:
+  * main-page
+  * detail-page with an id parameter
+  * about-page
+* put the ```<router-outlet>``` on the app.component
+
+...
+
+
+
+
+...
+
+* define routes configuration
+
+```
+const appRoutes: Routes = [{ 
+      path: 'details', 
+      component: DetailPageComponent 
+  },{
+
+  ...
+
+  }];
+```
+
+in @NgModule
+```
+imports: [
+    RouterModule.forRoot(appRoutes)
+    
+  ],
+```
+
+...
+
+
+
+...
+
+* add a navigation menu to reach two detail-page and the about-page (start with the last one)
+```
+<a routerLink="/details" routerLinkActive="active">Messages</a>
+```
+
+* Print the id Parameter on detail-page
+```
+class DetailPageComponent {
+  constructor(route: ActivatedRoute) {
+
+    let id = route.snapshot.params.id
+```
+
+
+
+# Query Parameters
+Use the [queryParams] directive along with [routerLink]
+```
+<a [routerLink]="['details']" [queryParams]="{ id: 99 }">Go to Id 99</a>
+```
+
+Navigate programmatically using the Router service:
+```
+  goToPage(pageNum) {
+    this.router.navigate(['/details'], { queryParams: { id: pageNum } });
+  }
+```
+
 
 
 
@@ -773,6 +782,8 @@ const crisisCenterRoutes: Routes = [
 
 https://github.com/mattex83/routing-demo
 
+... or continue using the application you made for the routing labs.
+
 * git checkout empty-app
 
 * Create three components ``<app-login>``, ``<app-not-found>`` and ``<app-main>``
@@ -780,6 +791,7 @@ https://github.com/mattex83/routing-demo
   ** just simulate it with fixed values
 
 * put the ``<router-outlet>`` component instead a ``<app-root>`` component
+
 
 
 
@@ -794,65 +806,10 @@ https://plnkr.co/edit/vpCqRHDAj7V6mlN1AknN?p=preview
 # LAB
 
 Refactor the application: 
-* keep <app-login> component and <app-not-found> component in the application module
+* keep ``<app-login>`` component and ``<app-not-found>`` component in the application module
 * put other component and eventually its dependencies into a new module called *BodyModule*
 * Lazy load the module when the navigation is performed
 
-
-
-# how to access dom from ts
-
-* sometimes we need to access the DOM
-* for instance to wrap a third party JS library in an angular component
-* or to make some directives
-
-
-
-# ElementRef
-
-THe following example prints the html of the component itself
-
-```
-import { AfterContentInit, Component, ElementRef } from '@angular/core';
-
-@Component({
-    selector: 'app-root',
-    template: `
-    <h1>My App</h1>
-    <pre>
-      <code>{{ node }}</code>
-    </pre>
-  `
-})
-export class AppComponent implements AfterContentInit {
-  node: string;
-
-  constructor(private elementRef: ElementRef) { }
-
-  ngAfterContentInit() {
-    const tmp = document.createElement('div');
-    const el = this.elementRef.nativeElement.cloneNode(true);
-
-    tmp.appendChild(el);
-    this.node = tmp.innerHTML;
-  }
-
-}
-```
-
-
-
-# An example of Directive
-```
-import { Directive, ElementRef, Input } from '@angular/core';
-
-@Directive({ selector: '[myHighlight]' })
-export class HighlightDirective {
-    constructor(el: ElementRef) {
-       el.nativeElement.style.backgroundColor = 'yellow';
-    }
-}
-```
 
 
 
@@ -954,6 +911,11 @@ ng xi18n -op locale -of messages.en.xlf
 ng build --prod --i18n-file locale/messages.it.xlf --locale it --i18n-format xlf
 ```
 
+
+
+# My preferred way to do i18n
+
+https://github.com/ngx-translate/core
 
 
 # LAB
