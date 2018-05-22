@@ -18,6 +18,15 @@ https://www.youtube.com/watch?v=unICbsPGFIA&feature=em-subs_digest-vrecs
 
 
 
+# Before we start
+Angular 6 came with RxJS 6 which breaks backward compatibility. 
+To make it work on legacy project you should use rxjs-compat 
+```
+npm install rxjs@6 rxjs-compat@6 --save
+```
+
+
+
 # What's an Observable
 Observable == stream of events 
 * published by some source
@@ -197,6 +206,9 @@ https://jsfiddle.net/w6jy1fyx/1/
 
 * https://netbasal.com/rxjs-six-operators-that-you-must-know-5ed3b6e238a0
 
+* http://reactive.how/
+* https://rxviz.com/
+
 
 
 # Map Operator
@@ -304,13 +316,6 @@ export class HeroService {
 
 
 
-# Stream composition
-At this point, if you want to add retry on error, just add 
-```
-.retry(3);
-```
-
-
 
 # On the other side...
 ```
@@ -373,6 +378,55 @@ export class WikiSmartComponent implements OnInit {
 
 
 
+# Pipeble operators
+## Before
+```
+source
+ .map(x => x + x)
+ .mergeMap(n => of(n + 1, n + 2)
+   .filter(x => x % 1 == 0)
+   .scan((acc, x) => acc + x, 0)
+ )
+ .catch(err => of('error found'))
+ .subscribe(printResult);
+```
+
+
+
+# Pipeble operators
+## Now
+```
+source.pipe(
+ map(x => x + x),
+ mergeMap(n => of(n + 1, n + 2).pipe(
+   filter(x => x % 1 == 0),
+   scan((acc, x) => acc + x, 0),
+ )),
+ catchError(err => of('error found')),
+).subscribe(printResult); 
+```
+
+
+
+# Piping requests
+```
+export class WikiSmartComponent implements OnInit {
+  items: Observable<string[]>;
+  constructor (private wikipediaService: WikipediaService) {}
+  private searchTermStream = new Subject<string>();
+  search(term: string) { this.searchTermStream.next(term); }
+  ngOnInit() {
+    this.items = this.searchTermStream.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((term: string) => this.wikipediaService.search(term))
+    )
+  }
+}
+```
+
+
+
 ## Explaining the example
 
  * debounceTime waits for the user to stop typing for at least 300 milliseconds.
@@ -390,12 +444,39 @@ https://xgrommx.github.io/rx-book/content/which_operator_do_i_use/instance_opera
 
 
 # Creating a custom operator
+## Lagacy
 ```
-function toJSON<T>(): Observable<T> {
-  return this.map(( response : Response ) => response.json());
-}
+Observable.prototype.userDefined = () => {
+  return new Observable((subscriber) => {
+    this.subscribe({
+      next(value) { subscriber.next(value); },
+      error(err) { subscriber.error(err); },
+      complete() { subscriber.complete(); },
+   });
+  });
+});
 
-Observable.prototype.toJSON = toJSON;
+source$.userDefined().subscribe();
+```
+
+
+
+# Creating a custom operator
+## RxJS 6
+```
+const userDefined = <T>() => (source: Observable<T>) => new Observable<T>((subscriber) => {
+    this.subscribe({
+      next(value) { subscriber.next(value); },
+      error(err) { subscriber.error(err); },
+      complete() { subscriber.complete(); },
+   });
+  });
+});
+
+source$.pipe(
+  userDefined(),
+)
+.subscribe();
 ```
 
 

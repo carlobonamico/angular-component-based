@@ -26,6 +26,18 @@ In your first Angular project, the framework helped you quickly create an HTML5 
 
 
 
+## Visual Studio Code
+* Community has incresed support for developing Angular applications.
+* lots of useful extensions
+
+
+
+## Visual Studio Code extensions
+https://medium.com/frontend-coach/7-must-have-visual-studio-code-extensions-for-angular-af9c476147fd
+
+
+
+
 # TOPICS
 * How does our code become unmanageable? A practical example
 * Issues and challenges in developing complex / large HTML5 applications
