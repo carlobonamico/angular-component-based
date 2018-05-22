@@ -291,10 +291,10 @@ import {Component} from '@angular/core';
 import {Input, Output, EventEmitter} from '@angular/core';
 
 @Component({selector: 'message-viewer', 
-    templateUrl : "components/message-viewer/message-viewer.html",
-    inputs : ["message"]
+    templateUrl : "components/message-viewer/message-viewer.html"
 })
 export class MessageViewerComponent  {
+    @Input()
     message; 
 ```
 
@@ -465,9 +465,7 @@ import {Component} from '@angular/core';
 import {Input, Output, EventEmitter} from '@angular/core';
 
 @Component({selector: 'message-list', 
-    templateUrl : "components/message-list/message-list.html",
-    inputs : ["messages"],
-    outputs: ["onCurrentMessageChanged"]
+    templateUrl : "components/message-list/message-list.html"
 
 })
 export class MessageListComponent  {
@@ -475,6 +473,7 @@ export class MessageListComponent  {
     currentMessageIndex = 0;
     currentMessage;
 
+    @Output()
     onCurrentMessageChanged = new EventEmitter<any>(); 
 ```
 This injects an ``onCurrentMessageChanged`` event callback in the component instance
@@ -514,28 +513,6 @@ Handle the button click events and emit the events
 In the parent html (mail-view.html)
 * bind the events to the ``MailViewComponent`` class methods
 
-
-
-
-## Another way to declare inputs and outputs 
-```
-@Component({
-  selector: 'app-confirm',
-  templateUrl: 'confirm.component.html'
-})
-export class ConfirmComponent {
-  @Input() okMsg = '';
-  @Input('cancelMsg') notOkMsg = '';
-  @Output() ok = new EventEmitter();
-  @Output('cancel') notOk = new EventEmitter();
-  onOkClick() {
-    this.ok.emit(true);
-  }
-  onNotOkClick() {
-    this.notOk.emit(true);
-  }
-}
-```
 
 
 
@@ -696,6 +673,43 @@ Create a new component named ``message-card`` with:
 
 
 
+# limit of ng-content
+
+* It's not possible to use it on an *ngFor
+
+* but there's a way: ng-template
+
+https://blog.angular-university.io/angular-ng-template-ng-container-ngtemplateoutlet/
+
+
+
+# Example
+
+List with customizable content
+```typescript
+@Component({
+  selector: 'awesome-list',
+  templateUrl: 'awesome-list.component.html',
+})
+export class CardComponent {
+    @Input() itemTemplate: string = '';
+}
+```
+
+```html
+<div class="list">
+  <div *ngFor="let message of messages" class="list-item">
+    <ng-container 
+      *ngTemplateOutlet="itemTemplate;context:ctx">
+    </ng-container>
+  </div>
+</div>
+```
+
+
+
+
+
 ## Compodoc
 
 ```
@@ -752,6 +766,13 @@ Declaring outputs
 
 ## LAB extra 
 Pass an additional ``allow-create="true"`` parameter
+
+
+
+
+## LAB extra (2)
+Use templates to customize list
+
 
 
 
@@ -901,7 +922,7 @@ Add the message reply logic to mail-view.ts
 
 
 
-## Lab 05
+## Lab 04
 Integrate the mail-composer component
 
 Include the component in the app module
@@ -927,7 +948,24 @@ Include it in the parent html template
 
 
 
-# how to access dom from ts
+# #ComponentId
+
+* As we saw using ngForm, We can assign an Id to a component and use it to access it's methods from the html.
+```html
+ <modal #errorModal>
+   <div class="modal-content">
+     <p>My modal content</p>
+   </div>
+ </modal>
+ ...
+ <button (click)="errorModal.open()">Open Modal</button>
+```
+
+
+
+
+
+# More control access dom from ts
 
 * sometimes we need to access the DOM
 * for instance to wrap a third party JS library in an angular component
@@ -940,7 +978,7 @@ Include it in the parent html template
 
 THe following example prints the html of the component itself
 
-```
+```typescript
 import { AfterContentInit, Component, ElementRef } from '@angular/core';
 
 @Component({
@@ -971,7 +1009,7 @@ export class AppComponent implements AfterContentInit {
 
 
 # An example of Directive
-```
+```typescript
 import { Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({ selector: '[myHighlight]' })
@@ -1031,9 +1069,21 @@ class CardHoverDirective {
 
 
 
-## HostBinding and HostListener example
+## HostBinding and HostListener examples
+
+https://alligator.io/angular/hostbinding-hostlistener/
 
 http://plnkr.co/edit/EgsmbXMN7s7YYDYIu9N8?p=preview
+
+
+
+
+# Optional Lab
+
+Use Host @HostBinding and @HostListener to 
+* On hovering
+    - create a directive changing the background color of a folder on hovering 
+    - Showing an message under the folder list with the name of the folder
 
 
 
@@ -1092,7 +1142,7 @@ class MyComponent implements OnDestroy {
 
 
 
-## Lab 04
+## Lab 05
 Into the message-list component
 
 Implement the ngOnChanges callback
@@ -1160,6 +1210,7 @@ Let's try it
 * after AOT:
 - Using a custom js file in the index.html with some global variables to configure the application
 - Using a server side configuration retrived during the application startup.
+- Using a json file published from the same server where the application is.
 
 
 
@@ -1170,16 +1221,11 @@ Let's try it
 ng build --prod
 ```
 
-But... no methods to build a library... at the moment!
-
-https://github.com/angular/angular-cli/issues/6510
+But... no methods to build a library... until yesterday!
 
 
 
-# packaging a library
-
-* The google way:
-https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview#
+# packaging a library before Angular 6
 
 * A simple application you can use to maka a library
 https://github.com/filipesilva/angular-quickstart-lib
@@ -1189,6 +1235,101 @@ https://github.com/dherges/ng-packagr
 
 * a Yeoman generator
 https://github.com/jvandemo/generator-angular2-library
+
+
+
+# packaging a library nowadays
+On an angular 6 project just run
+```
+ng generate library demo-components -p demo
+```
+* -p will put 'demo' as prefix on all the components on the library.
+
+To build it
+```
+ng build demo-components
+```
+To release it on NPM
+```
+cd dist/demo-components
+npm publish
+```
+You can release the library also on your own NPM server (like Nesux for instance) configuring NPM for that
+
+
+
+# Let's create a new workspace to try it
+
+https://medium.com/@SirMaxxx/angular-6-creating-a-shareable-control-library-6a27f0ebe5c2
+```
+ng g new demo-workspace -S
+```
+
+
+
+# Create the library
+
+```
+cd demo-workspace
+ng g library my-components -p my
+```
+
+
+
+# Create two applications
+```
+ng g application demo-website --prefix web
+ng g application demo-app --prefix app
+```
+Customize the app.component of each app to be able to distinguish them
+
+
+
+# Create a new component in the library
+Create a new component
+```
+cd projects/my-components/src/lib
+ng generate component checkbox
+ng generate component textinput
+```
+
+... and build the library
+```
+ng build my-components
+```
+BEWARE: The cli will not export the components you created. You should do it manually
+
+
+
+# install the library on one of the apps
+```
+npm install dist/my-components
+```
+Add it on the module
+```
+import { MyComponentsModule } from 'my-components';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule, MyComponentsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+and use the widgets you made.
+
+
+
+# Try them
+```
+ng serve demo-app
+ng serve demo-website
+```
 
 
 
@@ -1265,6 +1406,18 @@ export class AppModule { }
 ```
 
 LogService, MessageService, FolderService are singletons and injectable on every component inside the app
+
+
+
+# Another way to provide services
+##  from Angular 6
+Instead of add them to the providers array of the module it's possible to declare directly on the @Injectable annotation
+
+```typescript
+@Injectable({
+  providedIn: 'root',
+})
+```
 
 
 

@@ -15,7 +15,7 @@ export class MessageService{
             {
                 to: "carlo.bonamico@gmail.com",
                 from: "sonia.pini@nispro.it",
-                subject: "Angular 1.5",
+                subject: "Angular",
                 body: " a b c "
             },
             {

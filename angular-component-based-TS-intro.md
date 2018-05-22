@@ -95,6 +95,29 @@ onClickGood = (e: Event) => { this.info = e.message }
 
 
 
+## Fat arrow functions: scope
+```typescript
+...
+let a = this;
+myFunction(function(value){
+   let b = this; 
+});
+...
+```
+Is a and b the same object?
+
+```typescript
+...
+let a = this;
+myFunction((value)=>{
+   let b = this; 
+});
+...
+```
+And now?
+
+
+
 ## Example: Compile errors
 
 ```typescript

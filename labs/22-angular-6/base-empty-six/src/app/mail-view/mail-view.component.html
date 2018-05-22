@@ -1,0 +1,74 @@
+<div class="page-container">
+    
+        <header class="horizontal-container">
+            <mail-logo></mail-logo>
+    <!--        
+            
+            <search-panel class="horizontal-center"
+                default-query=" defaultQuery "
+                on-search-start = "search(query) "
+                >
+            </search-panel>
+            
+            <div class="right-align" ng-controller="AccountController as accountCtrl">
+                {{accountCtrl.accountEmail}}
+            </div>
+    -->
+        </header>
+    
+        <section class="page-center horizontal-container">
+            <nav class="page-left-menu">
+                
+                <section class="compose-toolbar">
+                    <button (click)="compose()" class="btn btn-danger">Compose</button>
+                </section>
+                
+                <section class="folder-list">
+                    <!-- TODO 2 - reimplementn folder list
+                    <folder-list 
+                        BIND PROPERTIES AND EVENTS
+                    </folder-list>
+                    
+    
+                     -->
+                </section>
+            </nav>
+            
+            <section class="mail-composer horizontal-center "
+                        [hidden]="!composerActive">
+                <!-- TODO3 migrate composer 
+                <message-composer 
+                    BIND PROPERTIES AND EVENTS
+                >
+                    
+                </message-composer> 
+                -->
+            </section> 
+                                                
+            <section class="horizontal-center vertical-container">
+                <!-- TODO 
+                <message-list 
+                    TODO properties here
+    
+                    >
+                </message-list>
+                -->
+                <div class="spacer">
+                   
+                        <hr>                
+                </div>
+               <!-- <message-viewer 
+               TODO properties nad events here
+                    >
+                </message-viewer>
+                -->
+            </section>
+    
+        </section>
+        
+        <footer> 
+            powered by Angular and <a href="http://www.nispro.it">NIS s.r.l.</a>
+            <br/>
+        </footer>
+        
+    </div>
